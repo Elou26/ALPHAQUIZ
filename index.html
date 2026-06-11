@@ -244,6 +244,34 @@
   .btn-discord{background:#5865F2;color:#fff}
   .btn-discord:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(88,101,242,.3)}
 
+  /* STREAK */
+  .streak-badge{
+    display:inline-flex;align-items:center;gap:5px;
+    font-size:13px;font-weight:600;
+    background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.25);
+    border-radius:99px;padding:4px 12px;color:var(--gold);
+    cursor:default;
+  }
+  .streak-badge.new-streak{animation:pop .4s ease}
+  @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
+
+  /* COUNTDOWN */
+  .hq-countdown{
+    margin-top:14px;padding:12px 16px;
+    background:var(--ink-3);border:1px solid var(--line);border-radius:10px;
+    font-size:13px;color:var(--muted);display:none;
+  }
+  .hq-countdown.show{display:flex;align-items:center;gap:10px}
+  .hq-countdown b{color:var(--paper);font-variant-numeric:tabular-nums}
+
+  /* RETURN NUDGE */
+  .return-nudge{
+    margin-top:18px;padding:16px 20px;
+    background:rgba(245,200,66,.05);border:1px solid rgba(245,200,66,.18);
+    border-radius:12px;font-size:14px;color:var(--muted);text-align:center;
+  }
+  .return-nudge b{color:var(--gold)}
+
   /* FOOTER */
   footer{border-top:1px solid var(--line);padding:44px 0;color:var(--muted);font-size:14px}
   .foot-in{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
@@ -261,6 +289,7 @@
       <a href="#themes">Thèmes</a>
       <a href="#classement">Classement</a>
       <a href="#offres">Offres</a>
+      <span class="streak-badge" id="streakBadge" title="Jours consécutifs" style="display:none">🔥 <span id="streakCount">1</span></span>
       <a href="#" onclick="startQuiz();return false;" class="nav-cta">Jouer gratuitement</a>
     </div>
   </div>
@@ -279,15 +308,11 @@
       </div>
     </div>
     <div class="hero-quiz" id="heroQuiz">
-      <div class="hq-tag"><span>Question du jour</span><b>87% se trompent</b></div>
-      <h3>Quel est le seul pays au monde traversé à la fois par l'équateur et un tropique ?</h3>
-      <div class="hq-opts">
-        <button class="hq-opt" data-good="0"><span class="key">A</span>Kenya</button>
-        <button class="hq-opt" data-good="1"><span class="key">B</span>Brésil</button>
-        <button class="hq-opt" data-good="0"><span class="key">C</span>Indonésie</button>
-        <button class="hq-opt" data-good="0"><span class="key">D</span>Colombie</button>
-      </div>
+      <div class="hq-tag"><span>Question du jour</span><b id="hqDifficulty"></b></div>
+      <h3 id="hqQuestion"></h3>
+      <div class="hq-opts" id="hqOpts"></div>
       <div class="hq-result" id="hqResult"></div>
+      <div class="hq-countdown" id="hqCountdown">⏳ Prochaine question dans <b id="hqTimer"></b></div>
     </div>
   </div>
 </header>
@@ -370,7 +395,8 @@
         <button class="btn btn-gold" onclick="goToOffers()">Débloquer les 8 thèmes</button>
         <button class="btn btn-ghost" onclick="goToScore()">Voir mon historique</button>
       </div>
-      <p class="trust">
+      <div class="return-nudge" id="returnNudge"></div>
+      <p class="trust" style="margin-top:14px">
         <a href="https://discord.gg/wZXeGr2qgk" target="_blank" rel="noopener" style="color:var(--gold)">Rejoins le Discord Alpha Quiz →</a>
       </p>
     </div>
@@ -616,23 +642,144 @@ let unlocked = _urlP.get('unlocked') === '1' || _urlP.get('pack') === '1';
 const $ = id => document.getElementById(id);
 
 /* ====================================================
-   HERO MINI-QUIZ
+   QUESTIONS DU JOUR (pool de 30, change chaque jour)
 ==================================================== */
-document.querySelectorAll('#heroQuiz .hq-opt').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const good = btn.dataset.good === "1";
-    document.querySelectorAll('#heroQuiz .hq-opt').forEach(b => {
+const DAILY_POOL = [
+  {q:"Quel est le seul pays au monde traversé à la fois par l'équateur et un tropique ?",a:["Kenya","Brésil","Indonésie","Colombie"],good:1,pct:"87%",e:"Le Brésil est traversé par l'équateur au nord et le tropique du Capricorne au sud."},
+  {q:"Combien d'os possède un requin ?",a:["0","12","86","206"],good:0,pct:"74%",e:"Les requins n'ont aucun os — leur squelette est entièrement fait de cartilage."},
+  {q:"Quelle est la capitale de l'Australie ?",a:["Sydney","Melbourne","Canberra","Brisbane"],good:2,pct:"61%",e:"Canberra, pas Sydney ! La ville a été construite exprès pour éviter la rivalité entre Sydney et Melbourne."},
+  {q:"Quel pays a le plus de lacs au monde ?",a:["Russie","Brésil","États-Unis","Canada"],good:3,pct:"79%",e:"Le Canada possède environ 60% des lacs d'eau douce de la planète."},
+  {q:"En quelle matière est faite la Tour Eiffel ?",a:["Acier inoxydable","Fonte","Aluminium","Fer puddlé"],good:3,pct:"68%",e:"La Tour Eiffel est construite en fer puddlé, pas en acier. Elle pèse 7 300 tonnes."},
+  {q:"Quel est l'animal terrestre le plus rapide ?",a:["Lion","Guépard","Antilope","Cheval"],good:1,pct:"12%",e:"Le guépard peut atteindre 110 km/h sur de courtes distances."},
+  {q:"Combien de langues officielles a la Suisse ?",a:["2","3","4","5"],good:2,pct:"55%",e:"4 langues officielles : allemand, français, italien et romanche."},
+  {q:"Quel océan est le plus grand ?",a:["Atlantique","Indien","Arctique","Pacifique"],good:3,pct:"18%",e:"Le Pacifique représente à lui seul plus de 30% de la surface terrestre."},
+  {q:"Quelle planète est surnommée la 'planète rouge' ?",a:["Jupiter","Vénus","Mars","Saturne"],good:2,pct:"8%",e:"Mars doit sa couleur à l'oxyde de fer (rouille) qui recouvre sa surface."},
+  {q:"Quel est le plus petit pays du monde ?",a:["Monaco","Liechtenstein","Saint-Marin","Vatican"],good:3,pct:"42%",e:"Le Vatican fait 0,44 km² — plus petit que la plupart des parcs urbains."},
+  {q:"Combien de cordes a une guitare classique ?",a:["4","5","6","7"],good:2,pct:"21%",e:"6 cordes pour la guitare classique. La basse en a généralement 4."},
+  {q:"Quel est le symbole chimique de l'or ?",a:["Or","Go","Au","Ag"],good:2,pct:"47%",e:"Au vient du latin 'Aurum'. Ag est l'argent."},
+  {q:"Qui a peint la Joconde ?",a:["Raphaël","Michel-Ange","Léonard de Vinci","Botticelli"],good:2,pct:"6%",e:"Léonard de Vinci l'a peinte entre 1503 et 1519. Elle est exposée au Louvre."},
+  {q:"Quel est le fleuve le plus long du monde ?",a:["Amazone","Mississippi","Nil","Yangtsé"],good:2,pct:"38%",e:"Le Nil mesure environ 6 650 km. L'Amazone est second mais transporte bien plus d'eau."},
+  {q:"En quelle année a eu lieu la Révolution française ?",a:["1769","1789","1799","1815"],good:1,pct:"19%",e:"1789 : prise de la Bastille le 14 juillet, début de la Révolution française."},
+  {q:"Quel est le métal le plus abondant sur Terre ?",a:["Fer","Cuivre","Aluminium","Or"],good:2,pct:"72%",e:"L'aluminium est le métal le plus abondant dans la croûte terrestre."},
+  {q:"Combien de joueurs y a-t-il dans une équipe de football ?",a:["9","10","11","12"],good:2,pct:"4%",e:"11 joueurs par équipe, dont le gardien."},
+  {q:"Quel pays a inventé le papier ?",a:["Japon","Égypte","Chine","Inde"],good:2,pct:"43%",e:"La Chine a inventé le papier au IIe siècle avant J.-C."},
+  {q:"Quelle est la monnaie du Japon ?",a:["Won","Yuan","Yen","Ringgit"],good:2,pct:"29%",e:"Le Yen (¥) est la monnaie officielle du Japon depuis 1871."},
+  {q:"Quel est le plus grand désert du monde ?",a:["Sahara","Gobi","Arabie","Antarctique"],good:3,pct:"83%",e:"L'Antarctique est techniquement le plus grand désert (14 millions km²) — un désert froid. Le Sahara est le plus grand désert chaud."},
+  {q:"Combien de dents a un adulte (avec les dents de sagesse) ?",a:["28","30","32","34"],good:2,pct:"51%",e:"32 dents au total : 8 incisives, 4 canines, 8 prémolaires et 12 molaires."},
+  {q:"Quel gaz les arbres absorbent-ils principalement ?",a:["Oxygène","Azote","CO₂","Hydrogène"],good:2,pct:"14%",e:"Les arbres absorbent le CO₂ (dioxyde de carbone) par photosynthèse et rejettent de l'oxygène."},
+  {q:"Quel est le sport le plus pratiqué au monde ?",a:["Basketball","Cricket","Tennis","Football"],good:3,pct:"22%",e:"Le football est pratiqué par environ 250 millions de joueurs dans plus de 200 pays."},
+  {q:"Combien de continents y a-t-il sur Terre ?",a:["5","6","7","8"],good:2,pct:"31%",e:"7 continents : Afrique, Antarctique, Asie, Europe, Amérique du Nord, Océanie, Amérique du Sud."},
+  {q:"Quel animal peut dormir debout ?",a:["Lion","Cheval","Éléphant","Girafe"],good:1,pct:"48%",e:"Les chevaux peuvent dormir debout grâce à un mécanisme de verrouillage des genoux."},
+  {q:"Quelle est la vitesse de la lumière (environ) ?",a:["100 000 km/s","300 000 km/s","500 000 km/s","1 000 000 km/s"],good:1,pct:"57%",e:"299 792 km/s — soit environ 300 000 km par seconde dans le vide."},
+  {q:"Qui a écrit 'Les Misérables' ?",a:["Zola","Balzac","Hugo","Flaubert"],good:2,pct:"33%",e:"Victor Hugo a publié Les Misérables en 1862. Jean Valjean, Cosette, Javert..."},
+  {q:"Dans quel pays se trouve la ville de Dubaï ?",a:["Qatar","Koweït","Arabie Saoudite","Émirats Arabes Unis"],good:3,pct:"36%",e:"Dubaï est l'une des 7 émirats des Émirats Arabes Unis (EAU)."},
+  {q:"Quel est le plus grand organe interne du corps humain ?",a:["Cœur","Cerveau","Foie","Poumons"],good:2,pct:"58%",e:"Le foie est le plus grand organe interne avec environ 1,5 kg."},
+  {q:"Combien de secondes y a-t-il dans une heure ?",a:["360","3 600","36 000","360 000"],good:1,pct:"25%",e:"60 secondes × 60 minutes = 3 600 secondes par heure."},
+];
+
+/* ====================================================
+   STREAK
+==================================================== */
+function initStreak() {
+  const today = new Date().toISOString().slice(0, 10);
+  const last = localStorage.getItem('aq_last_visit');
+  let streak = parseInt(localStorage.getItem('aq_streak') || '0');
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+
+  if (last === today) {
+    /* déjà visité aujourd'hui — rien à faire */
+  } else if (last === yesterday) {
+    streak++;
+    localStorage.setItem('aq_streak', streak);
+    localStorage.setItem('aq_last_visit', today);
+  } else {
+    streak = 1;
+    localStorage.setItem('aq_streak', streak);
+    localStorage.setItem('aq_last_visit', today);
+  }
+
+  if (streak >= 2) {
+    const badge = $('streakBadge');
+    $('streakCount').textContent = streak;
+    badge.style.display = 'inline-flex';
+    if (last !== today) badge.classList.add('new-streak');
+  }
+  return streak;
+}
+
+/* ====================================================
+   QUESTION DU JOUR (change chaque jour)
+==================================================== */
+function getDailyQuestion() {
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  return DAILY_POOL[dayOfYear % DAILY_POOL.length];
+}
+
+function initDailyQuestion() {
+  const today = new Date().toISOString().slice(0, 10);
+  const alreadyAnswered = localStorage.getItem('aq_daily_date') === today;
+  const dq = getDailyQuestion();
+
+  $('hqQuestion').textContent = dq.q;
+  $('hqDifficulty').textContent = `${dq.pct} se trompent`;
+
+  const keys = ['A', 'B', 'C', 'D'];
+  $('hqOpts').innerHTML = dq.a.map((opt, i) =>
+    `<button class="hq-opt" data-idx="${i}" data-good="${i === dq.good ? 1 : 0}"><span class="key">${keys[i]}</span>${opt}</button>`
+  ).join('');
+
+  if (alreadyAnswered) {
+    const saved = parseInt(localStorage.getItem('aq_daily_answer') || '-1');
+    document.querySelectorAll('#hqOpts .hq-opt').forEach(b => {
       b.disabled = true;
-      if (b.dataset.good === "1") b.classList.add('good');
+      if (parseInt(b.dataset.idx) === dq.good) b.classList.add('good');
+      if (parseInt(b.dataset.idx) === saved && saved !== dq.good) b.classList.add('bad');
     });
-    if (!good) btn.classList.add('bad');
-    const r = $('hqResult');
-    r.innerHTML = (good ? "<b>Bien joué — tu fais partie des 13%.</b> " : "<b>Raté — comme 87% des joueurs.</b> ")
-      + "Le Brésil est traversé par l'équateur au nord et le tropique du Capricorne au sud. "
-      + '<a href="#themes">Le vrai quiz commence ici →</a>';
-    r.classList.add('show');
+    const wasGood = saved === dq.good;
+    $('hqResult').innerHTML = (wasGood ? "<b>✓ Déjà répondu — bonne réponse !</b> " : "<b>✗ Déjà répondu.</b> ") + dq.e + ' <a href="#themes">Fais le quiz complet →</a>';
+    $('hqResult').classList.add('show');
+    startDailyCountdown();
+    return;
+  }
+
+  document.querySelectorAll('#hqOpts .hq-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const chosen = parseInt(btn.dataset.idx);
+      const good = chosen === dq.good;
+      document.querySelectorAll('#hqOpts .hq-opt').forEach(b => {
+        b.disabled = true;
+        if (parseInt(b.dataset.idx) === dq.good) b.classList.add('good');
+      });
+      if (!good) btn.classList.add('bad');
+      localStorage.setItem('aq_daily_date', today);
+      localStorage.setItem('aq_daily_answer', chosen);
+      $('hqResult').innerHTML = (good ? "<b>Bien joué !</b> " : "<b>Raté.</b> ") + dq.e + ' <a href="#themes">Fais le quiz complet →</a>';
+      $('hqResult').classList.add('show');
+      startDailyCountdown();
+    });
   });
-});
+}
+
+function startDailyCountdown() {
+  const el = $('hqTimer');
+  const cd = $('hqCountdown');
+  cd.classList.add('show');
+  const tick = () => {
+    const now = new Date();
+    const midnight = new Date(now); midnight.setHours(24, 0, 0, 0);
+    const diff = Math.floor((midnight - now) / 1000);
+    const h = Math.floor(diff / 3600), m = Math.floor((diff % 3600) / 60), s = diff % 60;
+    el.textContent = `${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}min ${String(s).padStart(2,'0')}s`;
+  };
+  tick();
+  setInterval(tick, 1000);
+}
+
+/* ====================================================
+   HERO MINI-QUIZ — init
+==================================================== */
+initStreak();
+initDailyQuestion();
 
 /* ====================================================
    QUIZ
@@ -742,6 +889,13 @@ function showResult() {
   $('finalText').textContent = texts[g.key];
   $('resultscreen').classList.add('show');
   saveMyScore(score);
+
+  const streak = parseInt(localStorage.getItem('aq_streak') || '1');
+  const streakMsg = streak >= 3
+    ? `🔥 <b>${streak} jours de suite</b> — continue comme ça demain.`
+    : `Reviens <b>demain</b> pour une nouvelle question du jour et garde la flamme allumée 🔥`;
+  $('returnNudge').innerHTML = streakMsg;
+
   upsellTimeout = setTimeout(openUpsell, 1500);
 }
 
