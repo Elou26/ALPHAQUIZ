@@ -177,30 +177,8 @@
   .skip{display:block;text-align:center;margin-top:16px;font-size:13px;color:var(--muted);background:none;width:100%}
   .skip:hover{color:var(--paper)}
 
-  /* SCORE SUBMIT MODAL */
-  #scoreModal .modal{border-color:rgba(245,200,66,.3);text-align:center}
-  .score-modal-grade{font-size:48px;margin-bottom:6px}
-  #scoreModal h3{font-size:22px;margin-bottom:8px}
-  #scoreModal .sub{color:var(--muted);font-size:14px;margin-bottom:22px}
-  .pseudo-input{
-    width:100%;background:var(--ink-3);border:1px solid var(--line);
-    border-radius:10px;padding:14px 16px;color:var(--paper);
-    font-family:var(--font-b);font-size:16px;outline:none;
-    transition:border-color .15s;margin-bottom:14px;
-  }
-  .pseudo-input:focus{border-color:var(--gold)}
-  .pseudo-input::placeholder{color:var(--muted)}
-  #submitScoreBtn{width:100%;padding:15px;border-radius:10px;font-weight:600;font-size:15px;background:var(--gold);color:var(--ink)}
-  #submitScoreBtn:hover{background:var(--gold-deep)}
-  #submitScoreBtn:disabled{opacity:.5;cursor:default}
-  .score-modal-skip{display:block;text-align:center;margin-top:12px;font-size:13px;color:var(--muted);background:none;width:100%}
-  .score-modal-skip:hover{color:var(--paper)}
-
   /* LEADERBOARD */
   .leaderboard{max-width:680px;margin:0 auto}
-  .lb-tabs{display:flex;gap:8px;margin-bottom:24px}
-  .lb-tab{padding:8px 18px;border-radius:99px;font-size:13px;font-weight:600;background:var(--ink-3);border:1px solid var(--line);color:var(--muted);transition:all .15s}
-  .lb-tab.active{background:var(--gold);color:var(--ink);border-color:var(--gold)}
   .lb-list{display:grid;gap:10px}
   .lb-row{
     display:flex;align-items:center;gap:14px;
@@ -389,8 +367,8 @@
       <div id="finalGradeBadge"></div>
       <p id="finalText"></p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
-        <button class="btn btn-gold" onclick="openScoreModal()">📊 Soumettre mon score</button>
-        <button class="btn btn-ghost" onclick="goToOffers()">Débloquer les 8 thèmes</button>
+        <button class="btn btn-gold" onclick="goToOffers()">Débloquer les 8 thèmes</button>
+        <button class="btn btn-ghost" onclick="goToScore()">Voir mon historique</button>
       </div>
       <p class="trust">
         <a href="https://discord.gg/wZXeGr2qgk" target="_blank" rel="noopener" style="color:var(--gold)">Rejoins le Discord Alpha Quiz →</a>
@@ -399,22 +377,15 @@
   </div>
 </section>
 
-<!-- CLASSEMENT -->
+<!-- MON SCORE -->
 <section id="classement">
   <div class="wrap">
     <div class="sec-head">
-      <h2>Classement global.</h2>
-      <p>Les meilleurs joueurs Alpha Quiz. Termine un quiz pour apparaître ici.</p>
+      <h2>Mon score.</h2>
+      <p>Tes dernières parties sauvegardées sur cet appareil. Chaque quiz terminé est enregistré automatiquement.</p>
     </div>
     <div class="leaderboard">
-      <div class="lb-tabs">
-        <button class="lb-tab active" onclick="switchTab('top',this)">🏆 Top 10</button>
-        <button class="lb-tab" onclick="switchTab('me',this)">👤 Mon score</button>
-      </div>
-      <div id="lbTop" class="lb-list">
-        <div class="lb-loading">Chargement du classement...</div>
-      </div>
-      <div id="lbMe" class="lb-list" style="display:none">
+      <div id="lbMe" class="lb-list">
         <div class="lb-empty">Termine un quiz pour voir ton score ici.</div>
       </div>
     </div>
@@ -534,96 +505,6 @@
   </div>
 </div>
 
-<!-- SCORE SUBMIT MODAL -->
-<div class="overlay" id="scoreModal" role="dialog" aria-modal="true">
-  <div class="modal" style="max-width:420px">
-    <div class="score-modal-grade" id="scoreModalIcon">🏆</div>
-    <h3 id="scoreModalTitle">Enregistre ton score</h3>
-    <p class="sub" id="scoreModalSub">Entre ton pseudo pour apparaître dans le classement.</p>
-    <div id="scoreModalGradeBadge" style="margin-bottom:18px"></div>
-    <input class="pseudo-input" id="pseudoInput" type="text" maxlength="20" placeholder="Ton pseudo (max 20 caractères)">
-    <button id="submitScoreBtn" onclick="submitScore()">Valider et rejoindre le classement →</button>
-    <button class="score-modal-skip" onclick="closeScoreModal()">Non merci, passer</button>
-  </div>
-</div>
-
-<!-- Firebase SDK -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp }
-    from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-
-  /* ====================================================
-     FIREBASE CONFIG
-     → Remplace ces valeurs par celles de ton projet Firebase :
-       1. Va sur https://console.firebase.google.com
-       2. Crée un projet "alphaquiz"
-       3. Ajoute une app Web
-       4. Copie la config ici
-       5. Dans Firestore Database → crée une base en mode "production"
-       6. Dans Règles Firestore, colle :
-            rules_version = '2';
-            service cloud.firestore {
-              match /databases/{database}/documents {
-                match /scores/{doc} {
-                  allow read: if true;
-                  allow create: if request.resource.data.pseudo is string
-                    && request.resource.data.pseudo.size() <= 20
-                    && request.resource.data.score is int;
-                }
-              }
-            }
-  ==================================================== */
-  const firebaseConfig = {
-    apiKey:            "REMPLACE_PAR_TON_API_KEY",
-    authDomain:        "REMPLACE.firebaseapp.com",
-    projectId:         "REMPLACE_PAR_TON_PROJECT_ID",
-    storageBucket:     "REMPLACE.appspot.com",
-    messagingSenderId: "REMPLACE",
-    appId:             "REMPLACE"
-  };
-
-  let db = null;
-  try {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-  } catch(e) {
-    console.warn("Firebase non configuré — classement désactivé.");
-  }
-
-  /* Expose les fonctions Firebase au script global */
-  window._fbSave = async (pseudo, score, grade) => {
-    if (!db) return false;
-    try {
-      await addDoc(collection(db, "scores"), {
-        pseudo: pseudo.trim(),
-        score,
-        grade,
-        ts: serverTimestamp()
-      });
-      return true;
-    } catch(e) { console.error(e); return false; }
-  };
-
-  window._fbTop10 = async () => {
-    if (!db) return null;
-    try {
-      const q = query(collection(db, "scores"), orderBy("score", "desc"), limit(10));
-      const snap = await getDocs(q);
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    } catch(e) { console.error(e); return null; }
-  };
-
-  /* Charge le classement dès le démarrage */
-  window._fbTop10().then(rows => {
-    if (rows === null) {
-      document.getElementById('lbTop').innerHTML =
-        '<div class="lb-empty">Configure Firebase pour activer le classement en ligne.</div>';
-      return;
-    }
-    renderLeaderboard(rows);
-  });
-</script>
 
 <script>
 /* ====================================================
@@ -860,6 +741,7 @@ function showResult() {
   };
   $('finalText').textContent = texts[g.key];
   $('resultscreen').classList.add('show');
+  saveMyScore(score);
   upsellTimeout = setTimeout(openUpsell, 1500);
 }
 
@@ -872,127 +754,40 @@ function goToOffers() {
 }
 
 /* ====================================================
-   SCORE SUBMIT MODAL
+   HISTORIQUE LOCAL (localStorage)
 ==================================================== */
-function openScoreModal() {
-  clearTimeout(upsellTimeout);
-  closeUpsell();
-  const g = getGrade(score);
-  const icons = { legende:'👑', platine:'💎', or:'🥇', argent:'🥈', bronze:'🥉' };
-  $('scoreModalIcon').textContent = icons[g.key];
-  $('scoreModalTitle').textContent = `Tu as obtenu ${g.label} !`;
-  $('scoreModalSub').textContent = `Score : ${score}/20 — entre ton pseudo pour rejoindre le classement.`;
-  $('scoreModalGradeBadge').innerHTML = gradeBadgeHTML(score);
-  $('pseudoInput').value = localStorage.getItem('aq_pseudo') || '';
-  $('submitScoreBtn').disabled = false;
-  $('submitScoreBtn').textContent = 'Valider et rejoindre le classement →';
-  $('scoreModal').classList.add('show');
+function saveMyScore(s) {
+  const history = JSON.parse(localStorage.getItem('aq_history') || '[]');
+  const g = getGrade(s);
+  history.unshift({ score: s, grade: g.label, css: g.css, date: new Date().toLocaleDateString('fr-FR') });
+  localStorage.setItem('aq_history', JSON.stringify(history.slice(0, 10)));
+  renderMyScore();
 }
 
-function closeScoreModal() {
-  $('scoreModal').classList.remove('show');
-}
-
-async function submitScore() {
-  const pseudo = $('pseudoInput').value.trim();
-  if (!pseudo) { $('pseudoInput').focus(); return; }
-
-  const btn = $('submitScoreBtn');
-  btn.disabled = true;
-  btn.textContent = 'Envoi en cours...';
-
-  const g = getGrade(score);
-  const ok = typeof window._fbSave === 'function'
-    ? await window._fbSave(pseudo, score, g.label)
-    : false;
-
-  if (ok) {
-    localStorage.setItem('aq_pseudo', pseudo);
-    saveMyScore(pseudo, score, g);
-    btn.textContent = '✓ Score enregistré !';
-    setTimeout(() => {
-      closeScoreModal();
-      document.getElementById('classement').scrollIntoView({ behavior: 'smooth' });
-      reloadLeaderboard();
-    }, 1200);
-  } else {
-    btn.textContent = '⚠️ Configure Firebase pour activer le classement';
-    btn.disabled = false;
-    /* Sauvegarde locale quand même */
-    saveMyScore(pseudo, score, g);
-    localStorage.setItem('aq_pseudo', pseudo);
-    setTimeout(() => {
-      closeScoreModal();
-      renderMyScore();
-    }, 2000);
-  }
-}
-
-/* ====================================================
-   LEADERBOARD
-==================================================== */
-function saveMyScore(pseudo, s, g) {
-  const prev = JSON.parse(localStorage.getItem('aq_my_score') || '{}');
-  if (!prev.score || s >= prev.score) {
-    localStorage.setItem('aq_my_score', JSON.stringify({ pseudo, score: s, grade: g.label, css: g.css }));
-  }
-}
-
-function renderLeaderboard(rows) {
-  if (!rows || rows.length === 0) {
-    $('lbTop').innerHTML = '<div class="lb-empty">Aucun score encore. Sois le premier !</div>';
+function renderMyScore() {
+  const history = JSON.parse(localStorage.getItem('aq_history') || '[]');
+  if (!history.length) {
+    $('lbMe').innerHTML = '<div class="lb-empty">Termine un quiz pour voir ton score ici.</div>';
     return;
   }
-  const rankClass = i => i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
-  const rankLabel = i => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`;
-
-  const myPseudo = localStorage.getItem('aq_pseudo');
-  $('lbTop').innerHTML = rows.map((r, i) => {
-    const g = getGrade(r.score);
-    const isMe = myPseudo && r.pseudo === myPseudo;
-    return `<div class="lb-row${isMe ? ' me' : ''}">
-      <span class="lb-rank ${rankClass(i)}">${rankLabel(i)}</span>
-      <span class="lb-name">${escHtml(r.pseudo)}${isMe ? ' <span style="color:var(--gold);font-size:12px">(toi)</span>' : ''}</span>
-      <span class="lb-grade ${g.css}">${g.label}</span>
+  const best = history.reduce((a, b) => a.score >= b.score ? a : b);
+  $('lbMe').innerHTML = history.map((r, i) => {
+    const isBest = r === best && i === history.findIndex(x => x === best);
+    return `<div class="lb-row${isBest ? ' me' : ''}">
+      <span class="lb-rank ${i === 0 ? 'gold' : ''}">${i === 0 ? '🕐 Dernière' : `#${i + 1}`}</span>
+      <span class="lb-name">${r.date}${isBest ? ' <span style="color:var(--gold);font-size:12px">★ Meilleur</span>' : ''}</span>
+      <span class="lb-grade ${r.css}">${r.grade}</span>
       <span class="lb-score">${r.score}/20</span>
     </div>`;
   }).join('');
 }
 
-function renderMyScore() {
-  const my = JSON.parse(localStorage.getItem('aq_my_score') || '{}');
-  if (!my.score) {
-    $('lbMe').innerHTML = '<div class="lb-empty">Termine un quiz pour voir ton score ici.</div>';
-    return;
-  }
-  $('lbMe').innerHTML = `
-    <div class="lb-row me">
-      <span class="lb-rank gold">👤</span>
-      <span class="lb-name">${escHtml(my.pseudo)}</span>
-      <span class="lb-grade ${my.css}">${my.grade}</span>
-      <span class="lb-score">${my.score}/20</span>
-    </div>
-    <div class="lb-you-row">Ton meilleur score sauvegardé localement.<br><b>Soumets-le</b> après un quiz pour apparaître dans le classement global.</div>`;
-}
-
-async function reloadLeaderboard() {
-  $('lbTop').innerHTML = '<div class="lb-loading">Mise à jour...</div>';
-  if (typeof window._fbTop10 === 'function') {
-    const rows = await window._fbTop10();
-    if (rows) renderLeaderboard(rows);
-  }
-}
-
-function switchTab(tab, el) {
-  document.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  $('lbTop').style.display = tab === 'top' ? 'grid' : 'none';
-  $('lbMe').style.display = tab === 'me' ? 'grid' : 'none';
-  if (tab === 'me') renderMyScore();
-}
-
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function goToScore() {
+  $('play').style.display = 'none';
+  $('resultscreen').classList.remove('show');
+  clearTimeout(upsellTimeout);
+  closeUpsell();
+  document.getElementById('classement').scrollIntoView({ behavior: 'smooth' });
 }
 
 /* ====================================================
@@ -1004,9 +799,9 @@ function buyPack() {
   if (CONFIG.stripePack) window.open(CONFIG.stripePack, '_blank');
 }
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeUpsell(); closeScoreModal(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeUpsell(); });
 $('upsell').addEventListener('click', e => { if (e.target === $('upsell')) closeUpsell(); });
-$('scoreModal').addEventListener('click', e => { if (e.target === $('scoreModal')) closeScoreModal(); });
+renderMyScore();
 </script>
 </body>
 </html>
