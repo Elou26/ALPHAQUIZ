@@ -26,101 +26,51 @@
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{
-    background:var(--ink);
-    color:var(--paper);
-    font-family:var(--font-b);
-    font-size:16px;
-    line-height:1.6;
-    -webkit-font-smoothing:antialiased;
-  }
+  body{background:var(--ink);color:var(--paper);font-family:var(--font-b);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
   h1,h2,h3,h4{font-family:var(--font-d);line-height:1.15;font-weight:700}
   a{color:inherit;text-decoration:none}
   button{font-family:inherit;cursor:pointer;border:none}
   :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
-  @media (prefers-reduced-motion:reduce){
-    *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
-  }
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
   .wrap{max-width:1100px;margin:0 auto;padding:0 24px}
 
-  /* ===== NAV ===== */
-  nav{
-    position:sticky;top:0;z-index:50;
-    background:rgba(10,10,15,.85);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--line);
-  }
+  /* NAV */
+  nav{position:sticky;top:0;z-index:50;background:rgba(10,10,15,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
   .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
   .logo{font-family:var(--font-d);font-weight:700;font-size:20px;letter-spacing:-.02em}
   .logo span{color:var(--gold)}
   .nav-links{display:flex;gap:28px;align-items:center;font-size:14px;color:var(--muted)}
   .nav-links a:hover{color:var(--paper)}
-  .nav-cta{
-    background:var(--gold);color:var(--ink);
-    padding:9px 18px;border-radius:99px;
-    font-weight:600;font-size:14px;
-    transition:transform .15s;
-  }
+  .nav-cta{background:var(--gold);color:var(--ink);padding:9px 18px;border-radius:99px;font-weight:600;font-size:14px;transition:transform .15s}
   .nav-cta:hover{transform:translateY(-1px)}
   @media(max-width:720px){.nav-links a:not(.nav-cta){display:none}}
 
-  /* ===== HERO ===== */
+  /* HERO */
   .hero{padding:72px 0 80px;position:relative;overflow:hidden}
-  .hero::before{
-    content:'';position:absolute;inset:0;
-    background:radial-gradient(ellipse 70% 55% at 50% -10%,rgba(245,200,66,.10),transparent 65%);
-    pointer-events:none;
-  }
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% -10%,rgba(245,200,66,.10),transparent 65%);pointer-events:none}
   .hero-in{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;position:relative}
   @media(max-width:880px){.hero-in{grid-template-columns:1fr;gap:40px}}
-  .eyebrow{
-    display:inline-flex;align-items:center;gap:8px;
-    font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--gold);margin-bottom:20px;
-  }
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
   .eyebrow::before{content:'';width:24px;height:1px;background:var(--gold)}
   .hero h1{font-size:clamp(34px,5vw,54px);letter-spacing:-.025em;margin-bottom:18px}
   .hero h1 em{font-style:normal;color:var(--gold)}
   .hero p{color:var(--muted);font-size:17px;max-width:46ch;margin-bottom:30px}
   .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
-  .btn{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:14px 26px;border-radius:99px;
-    font-weight:600;font-size:15px;
-    transition:transform .15s,box-shadow .15s;
-  }
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 26px;border-radius:99px;font-weight:600;font-size:15px;transition:transform .15s,box-shadow .15s}
   .btn-gold{background:var(--gold);color:var(--ink)}
   .btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,200,66,.25)}
   .btn-ghost{border:1px solid var(--line);color:var(--paper);background:transparent}
   .btn-ghost:hover{border-color:rgba(240,240,240,.25)}
 
-  /* Signature : la question live dans le hero */
-  .hero-quiz{
-    background:var(--ink-2);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:28px;
-    box-shadow:0 24px 60px rgba(0,0,0,.4);
-  }
+  .hero-quiz{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
   .hq-tag{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;justify-content:space-between}
   .hq-tag b{color:var(--gold);letter-spacing:0}
   .hero-quiz h3{font-size:19px;margin-bottom:18px;font-weight:600}
   .hq-opts{display:grid;gap:10px}
-  .hq-opt{
-    text-align:left;background:var(--ink-3);
-    border:1px solid var(--line);border-radius:10px;
-    padding:13px 16px;color:var(--paper);font-size:15px;
-    transition:border-color .15s,background .15s;
-    display:flex;align-items:center;gap:12px;
-  }
+  .hq-opt{text-align:left;background:var(--ink-3);border:1px solid var(--line);border-radius:10px;padding:13px 16px;color:var(--paper);font-size:15px;transition:border-color .15s,background .15s;display:flex;align-items:center;gap:12px}
   .hq-opt:hover:not(:disabled){border-color:rgba(245,200,66,.4)}
-  .hq-opt .key{
-    width:24px;height:24px;border-radius:6px;flex-shrink:0;
-    background:rgba(240,240,240,.06);
-    display:grid;place-items:center;
-    font-family:var(--font-d);font-size:12px;font-weight:600;color:var(--muted);
-  }
+  .hq-opt .key{width:24px;height:24px;border-radius:6px;flex-shrink:0;background:rgba(240,240,240,.06);display:grid;place-items:center;font-family:var(--font-d);font-size:12px;font-weight:600;color:var(--muted)}
   .hq-opt.good{border-color:var(--green);background:rgba(74,222,128,.08)}
   .hq-opt.bad{border-color:var(--red);background:rgba(248,113,113,.07)}
   .hq-result{margin-top:16px;font-size:14px;color:var(--muted);display:none}
@@ -128,43 +78,26 @@
   .hq-result b{color:var(--paper)}
   .hq-result a{color:var(--gold);font-weight:600}
 
-  /* ===== SECTIONS ===== */
+  /* SECTIONS */
   section{padding:84px 0;border-top:1px solid var(--line)}
   .sec-head{margin-bottom:44px;max-width:60ch}
   .sec-head h2{font-size:clamp(26px,3.4vw,36px);letter-spacing:-.02em;margin-bottom:12px}
   .sec-head p{color:var(--muted)}
 
-  /* ===== THEMES ===== */
+  /* THEMES */
   .themes{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
   @media(max-width:980px){.themes{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:520px){.themes{grid-template-columns:1fr}}
-  .theme{
-    background:var(--ink-2);border:1px solid var(--line);
-    border-radius:var(--radius);padding:24px 20px;
-    display:flex;flex-direction:column;gap:8px;
-    position:relative;transition:transform .15s,border-color .15s;
-    cursor:pointer;text-align:left;color:var(--paper);
-  }
+  .theme{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:24px 20px;display:flex;flex-direction:column;gap:8px;position:relative;transition:transform .15s,border-color .15s;cursor:pointer;text-align:left;color:var(--paper)}
   .theme:hover{transform:translateY(-3px);border-color:rgba(245,200,66,.35)}
   .theme .emoji{font-size:26px}
   .theme h3{font-size:16px;font-weight:600}
   .theme small{color:var(--muted);font-size:13px}
-  .theme .lock{
-    position:absolute;top:14px;right:14px;
-    font-size:11px;font-weight:600;letter-spacing:.06em;
-    color:var(--muted);background:rgba(240,240,240,.05);
-    border:1px solid var(--line);border-radius:99px;
-    padding:3px 9px;
-  }
+  .theme .lock{position:absolute;top:14px;right:14px;font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--muted);background:rgba(240,240,240,.05);border:1px solid var(--line);border-radius:99px;padding:3px 9px}
   .theme.free .lock{color:var(--ink);background:var(--gold);border-color:var(--gold)}
 
-  /* ===== QUIZ PLAYER ===== */
-  .player{
-    max-width:680px;margin:0 auto;
-    background:var(--ink-2);border:1px solid var(--line);
-    border-radius:var(--radius);padding:36px;
-    display:none;
-  }
+  /* QUIZ PLAYER */
+  .player{max-width:680px;margin:0 auto;background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:36px;display:none}
   .player.show{display:block}
   @media(max-width:560px){.player{padding:24px 18px}}
   .p-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:13px;color:var(--muted)}
@@ -173,89 +106,65 @@
   .p-bar i{display:block;height:100%;background:var(--gold);border-radius:99px;width:0;transition:width .4s ease}
   .p-q{font-family:var(--font-d);font-size:21px;font-weight:600;margin-bottom:24px;line-height:1.35}
   .p-opts{display:grid;gap:11px}
-  .p-opt{
-    text-align:left;background:var(--ink-3);
-    border:1px solid var(--line);border-radius:10px;
-    padding:15px 18px;color:var(--paper);font-size:15px;
-    display:flex;align-items:center;gap:13px;
-    transition:border-color .15s;
-  }
+  .p-opt{text-align:left;background:var(--ink-3);border:1px solid var(--line);border-radius:10px;padding:15px 18px;color:var(--paper);font-size:15px;display:flex;align-items:center;gap:13px;transition:border-color .15s}
   .p-opt:hover:not(:disabled){border-color:rgba(245,200,66,.4)}
   .p-opt:disabled{cursor:default;opacity:.85}
-  .p-opt .key{
-    width:26px;height:26px;border-radius:7px;flex-shrink:0;
-    background:rgba(240,240,240,.06);
-    display:grid;place-items:center;
-    font-family:var(--font-d);font-size:12px;font-weight:600;color:var(--muted);
-  }
+  .p-opt .key{width:26px;height:26px;border-radius:7px;flex-shrink:0;background:rgba(240,240,240,.06);display:grid;place-items:center;font-family:var(--font-d);font-size:12px;font-weight:600;color:var(--muted)}
   .p-opt.good{border-color:var(--green);background:rgba(74,222,128,.09)}
   .p-opt.good .key{background:var(--green);color:var(--ink)}
   .p-opt.bad{border-color:var(--red);background:rgba(248,113,113,.08)}
   .p-opt.bad .key{background:var(--red);color:var(--ink)}
-  .p-explain{
-    margin-top:20px;padding:16px 18px;
-    background:rgba(245,200,66,.06);
-    border:1px solid rgba(245,200,66,.18);
-    border-radius:10px;font-size:14px;color:#D8D8E0;
-    display:none;
-  }
+  .p-explain{margin-top:20px;padding:16px 18px;background:rgba(245,200,66,.06);border:1px solid rgba(245,200,66,.18);border-radius:10px;font-size:14px;color:#D8D8E0;display:none}
   .p-explain.show{display:block}
   .p-explain b{color:var(--gold)}
-  .p-next{
-    margin-top:22px;width:100%;
-    background:var(--gold);color:var(--ink);
-    padding:14px;border-radius:10px;
-    font-weight:600;font-size:15px;display:none;
-  }
+  .p-next{margin-top:22px;width:100%;background:var(--gold);color:var(--ink);padding:14px;border-radius:10px;font-weight:600;font-size:15px;display:none}
   .p-next.show{display:block}
   .p-next:hover{background:var(--gold-deep)}
 
-  /* ===== LOCK SCREEN (1,99€) ===== */
+  /* LOCK SCREEN */
   .lockscreen{text-align:center;display:none}
   .lockscreen.show{display:block}
   .lockscreen .padlock{font-size:38px;margin-bottom:14px}
   .lockscreen h3{font-size:26px;margin-bottom:14px}
   .lockscreen .score-line{font-size:16px;color:var(--muted);margin-bottom:6px}
   .lockscreen .score-line b{color:var(--paper);font-family:var(--font-d);font-size:18px}
-  .lockscreen .hook{
-    font-size:17px;margin:18px auto 8px;max-width:42ch;
-  }
+  .lockscreen .hook{font-size:17px;margin:18px auto 8px;max-width:42ch}
   .lockscreen .hook b{color:var(--gold)}
   .lockscreen .hook-q{font-family:var(--font-d);font-size:19px;font-weight:600;margin-bottom:26px}
-  .timer{
-    display:inline-flex;align-items:center;gap:9px;
-    background:rgba(248,113,113,.08);
-    border:1px solid rgba(248,113,113,.25);
-    border-radius:99px;padding:9px 20px;
-    font-family:var(--font-d);font-weight:600;font-size:16px;
-    color:var(--red);margin-bottom:26px;
-  }
+  .timer{display:inline-flex;align-items:center;gap:9px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);border-radius:99px;padding:9px 20px;font-family:var(--font-d);font-weight:600;font-size:16px;color:var(--red);margin-bottom:26px}
   .timer span{font-variant-numeric:tabular-nums}
   .lockscreen .btn-gold{width:100%;justify-content:center;font-size:16px;padding:17px}
   .trust{margin-top:14px;font-size:12.5px;color:var(--muted)}
 
-  /* ===== UPSELL MODAL (4,99€) ===== */
-  .overlay{
-    position:fixed;inset:0;z-index:100;
-    background:rgba(5,5,8,.8);backdrop-filter:blur(6px);
-    display:none;align-items:center;justify-content:center;padding:20px;
+  /* RESULT SCREEN */
+  .resultscreen{text-align:center;display:none}
+  .resultscreen.show{display:block}
+  .resultscreen .big{font-family:var(--font-d);font-size:52px;font-weight:700;color:var(--gold)}
+  .resultscreen p{color:var(--muted);max-width:44ch;margin:0 auto 26px}
+
+  /* GRADE BADGE */
+  .grade-badge{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:10px 22px;border-radius:99px;
+    font-family:var(--font-d);font-weight:700;font-size:17px;
+    margin:10px 0 20px;
   }
+  .grade-badge.bronze{background:rgba(205,127,50,.15);border:1px solid rgba(205,127,50,.4);color:#CD7F32}
+  .grade-badge.argent{background:rgba(192,192,192,.12);border:1px solid rgba(192,192,192,.35);color:#C0C0C0}
+  .grade-badge.or{background:rgba(245,200,66,.12);border:1px solid rgba(245,200,66,.4);color:var(--gold)}
+  .grade-badge.platine{background:rgba(100,200,255,.1);border:1px solid rgba(100,200,255,.35);color:#64C8FF}
+  .grade-badge.legende{background:rgba(180,100,255,.12);border:1px solid rgba(180,100,255,.4);color:#B464FF}
+
+  /* UPSELL MODAL */
+  .overlay{position:fixed;inset:0;z-index:100;background:rgba(5,5,8,.8);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
   .overlay.show{display:flex}
-  .modal{
-    background:var(--ink-2);border:1px solid rgba(245,200,66,.25);
-    border-radius:18px;max-width:520px;width:100%;
-    padding:38px 34px;max-height:92vh;overflow-y:auto;
-    box-shadow:0 40px 100px rgba(0,0,0,.6);
-  }
+  .modal{background:var(--ink-2);border:1px solid rgba(245,200,66,.25);border-radius:18px;max-width:520px;width:100%;padding:38px 34px;max-height:92vh;overflow-y:auto;box-shadow:0 40px 100px rgba(0,0,0,.6)}
   @media(max-width:520px){.modal{padding:28px 20px}}
   .modal .trophy{font-size:36px;margin-bottom:12px}
   .modal h3{font-size:24px;margin-bottom:12px;letter-spacing:-.01em}
   .modal .lead{color:var(--muted);font-size:15px;margin-bottom:22px}
   .modal .lead b{color:var(--paper)}
-  .pack{
-    border:1px solid var(--line);border-radius:12px;
-    padding:22px;margin-bottom:22px;background:var(--ink-3);
-  }
+  .pack{border:1px solid var(--line);border-radius:12px;padding:22px;margin-bottom:22px;background:var(--ink-3)}
   .pack h4{font-size:16px;margin-bottom:14px;color:var(--gold)}
   .pack ul{list-style:none;display:grid;gap:10px;font-size:14px}
   .pack li{display:flex;gap:10px;align-items:flex-start}
@@ -265,62 +174,82 @@
   .price-new{font-family:var(--font-d);font-size:34px;font-weight:700;color:var(--gold)}
   .price-tag{font-size:12px;color:var(--red);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
   .modal .btn-gold{width:100%;justify-content:center;font-size:16px;padding:16px}
-  .skip{
-    display:block;text-align:center;margin-top:16px;
-    font-size:13px;color:var(--muted);background:none;width:100%;
-  }
+  .skip{display:block;text-align:center;margin-top:16px;font-size:13px;color:var(--muted);background:none;width:100%}
   .skip:hover{color:var(--paper)}
 
-  /* ===== RESULT ===== */
-  .resultscreen{text-align:center;display:none}
-  .resultscreen.show{display:block}
-  .resultscreen .big{font-family:var(--font-d);font-size:52px;font-weight:700;color:var(--gold)}
-  .resultscreen .grade{font-size:20px;font-family:var(--font-d);font-weight:600;margin:6px 0 14px}
-  .resultscreen p{color:var(--muted);max-width:44ch;margin:0 auto 26px}
+  /* SCORE SUBMIT MODAL */
+  #scoreModal .modal{border-color:rgba(245,200,66,.3);text-align:center}
+  .score-modal-grade{font-size:48px;margin-bottom:6px}
+  #scoreModal h3{font-size:22px;margin-bottom:8px}
+  #scoreModal .sub{color:var(--muted);font-size:14px;margin-bottom:22px}
+  .pseudo-input{
+    width:100%;background:var(--ink-3);border:1px solid var(--line);
+    border-radius:10px;padding:14px 16px;color:var(--paper);
+    font-family:var(--font-b);font-size:16px;outline:none;
+    transition:border-color .15s;margin-bottom:14px;
+  }
+  .pseudo-input:focus{border-color:var(--gold)}
+  .pseudo-input::placeholder{color:var(--muted)}
+  #submitScoreBtn{width:100%;padding:15px;border-radius:10px;font-weight:600;font-size:15px;background:var(--gold);color:var(--ink)}
+  #submitScoreBtn:hover{background:var(--gold-deep)}
+  #submitScoreBtn:disabled{opacity:.5;cursor:default}
+  .score-modal-skip{display:block;text-align:center;margin-top:12px;font-size:13px;color:var(--muted);background:none;width:100%}
+  .score-modal-skip:hover{color:var(--paper)}
 
-  /* ===== VIDEOS ===== */
+  /* LEADERBOARD */
+  .leaderboard{max-width:680px;margin:0 auto}
+  .lb-tabs{display:flex;gap:8px;margin-bottom:24px}
+  .lb-tab{padding:8px 18px;border-radius:99px;font-size:13px;font-weight:600;background:var(--ink-3);border:1px solid var(--line);color:var(--muted);transition:all .15s}
+  .lb-tab.active{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+  .lb-list{display:grid;gap:10px}
+  .lb-row{
+    display:flex;align-items:center;gap:14px;
+    background:var(--ink-2);border:1px solid var(--line);
+    border-radius:12px;padding:14px 18px;
+  }
+  .lb-row.me{border-color:rgba(245,200,66,.4);background:rgba(245,200,66,.04)}
+  .lb-rank{
+    font-family:var(--font-d);font-weight:700;font-size:18px;
+    width:32px;text-align:center;flex-shrink:0;
+  }
+  .lb-rank.gold{color:var(--gold)}
+  .lb-rank.silver{color:#C0C0C0}
+  .lb-rank.bronze{color:#CD7F32}
+  .lb-name{font-weight:600;flex:1;font-size:15px}
+  .lb-grade{font-size:12px;padding:3px 10px;border-radius:99px;font-weight:600}
+  .lb-grade.bronze{background:rgba(205,127,50,.15);color:#CD7F32}
+  .lb-grade.argent{background:rgba(192,192,192,.12);color:#C0C0C0}
+  .lb-grade.or{background:rgba(245,200,66,.12);color:var(--gold)}
+  .lb-grade.platine{background:rgba(100,200,255,.1);color:#64C8FF}
+  .lb-grade.legende{background:rgba(180,100,255,.12);color:#B464FF}
+  .lb-score{font-family:var(--font-d);font-weight:700;font-size:16px;color:var(--gold);flex-shrink:0}
+  .lb-empty{text-align:center;color:var(--muted);padding:32px;font-size:14px}
+  .lb-loading{text-align:center;color:var(--muted);padding:32px;font-size:14px}
+  .lb-you-row{
+    margin-top:16px;padding:14px 18px;
+    background:rgba(245,200,66,.05);border:1px dashed rgba(245,200,66,.3);
+    border-radius:12px;text-align:center;font-size:14px;color:var(--muted);
+  }
+  .lb-you-row b{color:var(--gold)}
+
+  /* VIDEOS */
   .videos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
   @media(max-width:880px){.videos{grid-template-columns:1fr}}
-  .video{
-    background:var(--ink-2);border:1px solid var(--line);
-    border-radius:var(--radius);overflow:hidden;
-    transition:transform .15s,border-color .15s;
-  }
+  .video{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:transform .15s,border-color .15s}
   .video:hover{transform:translateY(-3px);border-color:rgba(245,200,66,.3)}
-  .video .thumb{
-    aspect-ratio:16/9;background:linear-gradient(135deg,var(--ink-3),#23232F);
-    display:grid;place-items:center;position:relative;
-  }
-  .video .thumb .play{
-    width:52px;height:52px;border-radius:50%;
-    background:var(--gold);display:grid;place-items:center;
-    color:var(--ink);font-size:18px;padding-left:4px;
-  }
-  .video .thumb .vtag{
-    position:absolute;top:12px;left:12px;
-    font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-    background:rgba(10,10,15,.7);border:1px solid var(--line);
-    border-radius:99px;padding:4px 10px;color:var(--gold);
-  }
+  .video .thumb{aspect-ratio:16/9;background:linear-gradient(135deg,var(--ink-3),#23232F);display:grid;place-items:center;position:relative}
+  .video .thumb .play{width:52px;height:52px;border-radius:50%;background:var(--gold);display:grid;place-items:center;color:var(--ink);font-size:18px;padding-left:4px}
+  .video .thumb .vtag{position:absolute;top:12px;left:12px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:rgba(10,10,15,.7);border:1px solid var(--line);border-radius:99px;padding:4px 10px;color:var(--gold)}
   .video .vbody{padding:18px}
   .video h3{font-size:15.5px;font-weight:600;margin-bottom:6px}
   .video small{color:var(--muted);font-size:13px}
 
-  /* ===== BOUTIQUE ===== */
+  /* BOUTIQUE */
   .shop{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:860px;margin:0 auto}
   @media(max-width:760px){.shop{grid-template-columns:1fr}}
-  .offer{
-    background:var(--ink-2);border:1px solid var(--line);
-    border-radius:var(--radius);padding:32px 28px;
-    display:flex;flex-direction:column;
-  }
+  .offer{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:32px 28px;display:flex;flex-direction:column}
   .offer.best{border-color:rgba(245,200,66,.45);position:relative}
-  .offer .badge{
-    position:absolute;top:-12px;left:24px;
-    background:var(--gold);color:var(--ink);
-    font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-    border-radius:99px;padding:4px 12px;
-  }
+  .offer .badge{position:absolute;top:-12px;left:24px;background:var(--gold);color:var(--ink);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:99px;padding:4px 12px}
   .offer h3{font-size:19px;margin-bottom:6px}
   .offer .o-price{font-family:var(--font-d);font-size:34px;font-weight:700;margin:10px 0 4px}
   .offer .o-price small{font-size:14px;color:var(--muted);font-weight:400;font-family:var(--font-b)}
@@ -330,20 +259,14 @@
   .offer li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0}
   .offer .btn{margin-top:auto;justify-content:center;width:100%}
 
-  /* ===== DISCORD BAND ===== */
-  .discord-band{
-    background:linear-gradient(135deg,rgba(88,101,242,.12),rgba(245,200,66,.06));
-    border:1px solid rgba(88,101,242,.3);
-    border-radius:var(--radius);
-    padding:40px 36px;
-    display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
-  }
+  /* DISCORD BAND */
+  .discord-band{background:linear-gradient(135deg,rgba(88,101,242,.12),rgba(245,200,66,.06));border:1px solid rgba(88,101,242,.3);border-radius:var(--radius);padding:40px 36px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
   .discord-band h3{font-size:22px;margin-bottom:6px}
   .discord-band p{color:var(--muted);font-size:15px;max-width:48ch}
   .btn-discord{background:#5865F2;color:#fff}
   .btn-discord:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(88,101,242,.3)}
 
-  /* ===== FOOTER ===== */
+  /* FOOTER */
   footer{border-top:1px solid var(--line);padding:44px 0;color:var(--muted);font-size:14px}
   .foot-in{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
   .foot-links{display:flex;gap:22px}
@@ -352,20 +275,20 @@
 </head>
 <body>
 
-<!-- ===================== NAV ===================== -->
+<!-- NAV -->
 <nav>
   <div class="wrap nav-in">
     <a href="#" class="logo">ALPHA<span>QUIZ</span></a>
     <div class="nav-links">
       <a href="#themes">Thèmes</a>
-      <a href="#videos">Vidéos</a>
+      <a href="#classement">Classement</a>
       <a href="#offres">Offres</a>
       <a href="#" onclick="startQuiz();return false;" class="nav-cta">Jouer gratuitement</a>
     </div>
   </div>
 </nav>
 
-<!-- ===================== HERO ===================== -->
+<!-- HERO -->
 <header class="hero">
   <div class="wrap hero-in">
     <div>
@@ -377,8 +300,6 @@
         <a href="#offres" class="btn btn-ghost">Voir le pack complet</a>
       </div>
     </div>
-
-    <!-- Signature : la question live -->
     <div class="hero-quiz" id="heroQuiz">
       <div class="hq-tag"><span>Question du jour</span><b>87% se trompent</b></div>
       <h3>Quel est le seul pays au monde traversé à la fois par l'équateur et un tropique ?</h3>
@@ -393,7 +314,7 @@
   </div>
 </header>
 
-<!-- ===================== THEMES ===================== -->
+<!-- THEMES -->
 <section id="themes">
   <div class="wrap">
     <div class="sec-head">
@@ -402,62 +323,44 @@
     </div>
     <div class="themes">
       <button class="theme free" onclick="startQuiz()">
-        <span class="lock">GRATUIT</span>
-        <span class="emoji">🧠</span>
-        <h3>Culture Générale</h3>
-        <small>4 quiz · niveau progressif</small>
+        <span class="lock">GRATUIT</span><span class="emoji">🧠</span>
+        <h3>Culture Générale</h3><small>4 quiz · niveau progressif</small>
       </button>
       <button class="theme" onclick="openUpsell()">
-        <span class="lock">🔒 Pack</span>
-        <span class="emoji">🌍</span>
-        <h3>Géographie</h3>
-        <small>4 quiz · capitales aux mystères</small>
+        <span class="lock">🔒 Pack</span><span class="emoji">🌍</span>
+        <h3>Géographie</h3><small>4 quiz · capitales aux mystères</small>
       </button>
       <button class="theme" onclick="openUpsell()">
-        <span class="lock">🔒 Pack</span>
-        <span class="emoji">🏛️</span>
-        <h3>Histoire & Civilisations</h3>
-        <small>4 quiz · de l'Antiquité à hier</small>
+        <span class="lock">🔒 Pack</span><span class="emoji">🏛️</span>
+        <h3>Histoire & Civilisations</h3><small>4 quiz · de l'Antiquité à hier</small>
       </button>
       <button class="theme" onclick="openUpsell()">
-        <span class="lock">🔒 Pack</span>
-        <span class="emoji">🔬</span>
-        <h3>Sciences & Nature</h3>
-        <small>3 quiz · le monde expliqué</small>
+        <span class="lock">🔒 Pack</span><span class="emoji">🔬</span>
+        <h3>Sciences & Nature</h3><small>3 quiz · le monde expliqué</small>
       </button>
       <button class="theme" onclick="openUpsell()">
-        <span class="lock">🔒 Pack</span>
-        <span class="emoji">🎬</span>
-        <h3>Cinéma & Séries</h3>
-        <small>4 quiz · du culte au récent</small>
+        <span class="lock">🔒 Pack</span><span class="emoji">🎬</span>
+        <h3>Cinéma & Séries</h3><small>4 quiz · du culte au récent</small>
       </button>
       <button class="theme" onclick="openUpsell()">
-        <span class="lock">🔒 Pack</span>
-        <span class="emoji">⚽</span>
-        <h3>Sport & Champions</h3>
-        <small>3 quiz · records et légendes</small>
+        <span class="lock">🔒 Pack</span><span class="emoji">⚽</span>
+        <h3>Sport & Champions</h3><small>3 quiz · records et légendes</small>
       </button>
       <button class="theme" onclick="openUpsell()">
-        <span class="lock">🔒 Pack</span>
-        <span class="emoji">🍝</span>
-        <h3>Gastronomie</h3>
-        <small>3 quiz · cuisines du monde</small>
+        <span class="lock">🔒 Pack</span><span class="emoji">🍝</span>
+        <h3>Gastronomie</h3><small>3 quiz · cuisines du monde</small>
       </button>
       <button class="theme" onclick="openUpsell()">
-        <span class="lock">🔒 Pack</span>
-        <span class="emoji">⚡</span>
-        <h3>Mythologie & Mystères</h3>
-        <small>4 quiz · dieux et énigmes</small>
+        <span class="lock">🔒 Pack</span><span class="emoji">⚡</span>
+        <h3>Mythologie & Mystères</h3><small>4 quiz · dieux et énigmes</small>
       </button>
     </div>
   </div>
 </section>
 
-<!-- ===================== QUIZ PLAYER ===================== -->
+<!-- QUIZ PLAYER -->
 <section id="play" style="display:none">
   <div class="wrap">
-
-    <!-- Le quiz en cours -->
     <div class="player" id="player">
       <div class="p-top">
         <span>Culture Générale · Quiz n°1</span>
@@ -470,7 +373,6 @@
       <button class="p-next" id="pNext" onclick="nextQuestion()">Question suivante →</button>
     </div>
 
-    <!-- L'écran de blocage 1,99€ -->
     <div class="player lockscreen" id="lockscreen">
       <div class="padlock">🔒</div>
       <h3>Tu y es presque...</h3>
@@ -482,54 +384,68 @@
       <p class="trust">Paiement sécurisé · Accès instantané</p>
     </div>
 
-    <!-- L'écran de résultat final -->
     <div class="player resultscreen" id="resultscreen">
       <div class="big" id="finalScore">0/20</div>
-      <div class="grade" id="finalGrade">Niveau Explorateur</div>
+      <div id="finalGradeBadge"></div>
       <p id="finalText"></p>
-      <button class="btn btn-gold" onclick="goToOffers()">Débloquer les 8 thèmes — 4,99€</button>
-      <p class="trust" style="margin-top:18px">
-        <a href="https://discord.gg/wZXeGr2qgk" target="_blank" rel="noopener" style="color:var(--gold)">Rejoins le Discord Alpha Quiz pour défier la communauté →</a>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
+        <button class="btn btn-gold" onclick="openScoreModal()">📊 Soumettre mon score</button>
+        <button class="btn btn-ghost" onclick="goToOffers()">Débloquer les 8 thèmes</button>
+      </div>
+      <p class="trust">
+        <a href="https://discord.gg/wZXeGr2qgk" target="_blank" rel="noopener" style="color:var(--gold)">Rejoins le Discord Alpha Quiz →</a>
       </p>
     </div>
-
   </div>
 </section>
 
-<!-- ===================== VIDEOS ===================== -->
+<!-- CLASSEMENT -->
+<section id="classement">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Classement global.</h2>
+      <p>Les meilleurs joueurs Alpha Quiz. Termine un quiz pour apparaître ici.</p>
+    </div>
+    <div class="leaderboard">
+      <div class="lb-tabs">
+        <button class="lb-tab active" onclick="switchTab('top',this)">🏆 Top 10</button>
+        <button class="lb-tab" onclick="switchTab('me',this)">👤 Mon score</button>
+      </div>
+      <div id="lbTop" class="lb-list">
+        <div class="lb-loading">Chargement du classement...</div>
+      </div>
+      <div id="lbMe" class="lb-list" style="display:none">
+        <div class="lb-empty">Termine un quiz pour voir ton score ici.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEOS -->
 <section id="videos">
   <div class="wrap">
     <div class="sec-head">
       <h2>Les dernières vidéos.</h2>
-      <p>Chaque semaine, des nouveaux quiz sur la chaîne YouTube et en live TikTok. Le site te permet d'aller plus loin que la vidéo.</p>
+      <p>Chaque semaine, des nouveaux quiz sur la chaîne YouTube et en live TikTok.</p>
     </div>
     <div class="videos">
       <a class="video" href="https://youtu.be/H84cUDjfrDc?si=2zTXQaH0W712PtJ4" target="_blank" rel="noopener">
         <div class="thumb" style="background:url('https://img.youtube.com/vi/H84cUDjfrDc/mqdefault.jpg') center/cover no-repeat"><span class="vtag">Alpha Quiz</span><span class="play">▶</span></div>
-        <div class="vbody">
-          <h3>Vidéo Alpha Quiz</h3>
-          <small>Regarde sur YouTube →</small>
-        </div>
+        <div class="vbody"><h3>Vidéo Alpha Quiz</h3><small>Regarde sur YouTube →</small></div>
       </a>
       <a class="video" href="https://youtu.be/Rgy7g5djvlk?si=xqfAnh7EcCu4l3nt" target="_blank" rel="noopener">
         <div class="thumb" style="background:url('https://img.youtube.com/vi/Rgy7g5djvlk/mqdefault.jpg') center/cover no-repeat"><span class="vtag">Alpha Quiz</span><span class="play">▶</span></div>
-        <div class="vbody">
-          <h3>Vidéo Alpha Quiz</h3>
-          <small>Regarde sur YouTube →</small>
-        </div>
+        <div class="vbody"><h3>Vidéo Alpha Quiz</h3><small>Regarde sur YouTube →</small></div>
       </a>
       <a class="video" href="https://youtu.be/z4bs815dSzI?si=aaPhF-tOzLXXUUxQ" target="_blank" rel="noopener">
         <div class="thumb" style="background:url('https://img.youtube.com/vi/z4bs815dSzI/mqdefault.jpg') center/cover no-repeat"><span class="vtag">Alpha Quiz</span><span class="play">▶</span></div>
-        <div class="vbody">
-          <h3>Vidéo Alpha Quiz</h3>
-          <small>Regarde sur YouTube →</small>
-        </div>
+        <div class="vbody"><h3>Vidéo Alpha Quiz</h3><small>Regarde sur YouTube →</small></div>
       </a>
     </div>
   </div>
 </section>
 
-<!-- ===================== OFFRES ===================== -->
+<!-- OFFRES -->
 <section id="offres">
   <div class="wrap">
     <div class="sec-head">
@@ -537,7 +453,6 @@
       <p>Pas d'abonnement. Pas de piège. Tu payes une fois, c'est à toi.</p>
     </div>
     <div class="shop">
-
       <div class="offer">
         <h3>Quiz complet</h3>
         <div class="o-price">1,99€ <small>· paiement unique</small></div>
@@ -545,12 +460,11 @@
         <ul>
           <li>Les 15 questions verrouillées du quiz en cours</li>
           <li>Explication détaillée à chaque réponse</li>
-          <li>Score final qualifié avec ton niveau</li>
+          <li>Score qualifié + grade dans le classement</li>
           <li>Accès instantané, à vie</li>
         </ul>
         <button class="btn btn-ghost" onclick="startQuiz()">Commencer le quiz gratuit</button>
       </div>
-
       <div class="offer best">
         <span class="badge">Le plus choisi</span>
         <h3>Pack Alpha Quiz — Accès à vie</h3>
@@ -559,31 +473,30 @@
         <ul>
           <li>8 thèmes exclusifs — Géo, Histoire, Sciences, Cinéma, Sport, Gastronomie, Mythologie, Culture G</li>
           <li>30+ quiz ultra détaillés avec explications à chaque réponse</li>
-          <li>Score qualifié — sache exactement ton niveau sur chaque thème</li>
-          <li>Accès au serveur Discord Alpha Quiz — défie la communauté</li>
+          <li>Score qualifié — grade Bronze à Légende dans le classement global</li>
+          <li>Accès au serveur Discord Alpha Quiz</li>
           <li>Nouveaux quiz ajoutés régulièrement, inclus à vie</li>
         </ul>
         <button class="btn btn-gold" onclick="buyPack()">Je prends le pack complet — 4,99€</button>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ===================== DISCORD ===================== -->
+<!-- DISCORD -->
 <section>
   <div class="wrap">
     <div class="discord-band">
       <div>
         <h3>La communauté Alpha Quiz t'attend.</h3>
-        <p>Défis quotidiens, classements, et les coulisses de la chaîne. Rejoins les joueurs qui ne s'arrêtent jamais à 5 questions.</p>
+        <p>Défis quotidiens, classements, et les coulisses de la chaîne.</p>
       </div>
       <a href="https://discord.gg/wZXeGr2qgk" target="_blank" rel="noopener" class="btn btn-discord">Rejoindre le Discord</a>
     </div>
   </div>
 </section>
 
-<!-- ===================== FOOTER ===================== -->
+<!-- FOOTER -->
 <footer>
   <div class="wrap foot-in">
     <span>© 2026 Alpha Quiz — Tous droits réservés</span>
@@ -596,19 +509,19 @@
   </div>
 </footer>
 
-<!-- ===================== UPSELL MODAL 4,99€ ===================== -->
+<!-- UPSELL MODAL -->
 <div class="overlay" id="upsell" role="dialog" aria-modal="true" aria-labelledby="upsellTitle">
   <div class="modal">
     <div class="trophy">🏆</div>
     <h3 id="upsellTitle">Tu viens de prouver que t'es pas comme les autres.</h3>
-    <p class="lead">La plupart des gens s'arrêtent aux 5 questions gratuites. <b>Toi tu es allé plus loin.</b> On a quelque chose pour les joueurs sérieux.</p>
+    <p class="lead">La plupart des gens s'arrêtent aux 5 questions gratuites. <b>Toi tu es allé plus loin.</b></p>
     <div class="pack">
       <h4>Le Pack Alpha Quiz — Accès à vie</h4>
       <ul>
-        <li>8 thèmes exclusifs — Géographie, Histoire, Sciences, Cinéma, Sport, Gastronomie, Mythologie, Culture Générale</li>
-        <li>30+ quiz ultra détaillés avec explications à chaque réponse</li>
-        <li>Score qualifié — sache exactement ton niveau sur chaque thème</li>
-        <li>Accès au serveur Discord Alpha Quiz — défie la communauté</li>
+        <li>8 thèmes exclusifs</li>
+        <li>30+ quiz ultra détaillés avec explications</li>
+        <li>Grade Bronze → Légende dans le classement global</li>
+        <li>Accès au serveur Discord Alpha Quiz</li>
       </ul>
     </div>
     <div class="price-row">
@@ -621,21 +534,131 @@
   </div>
 </div>
 
+<!-- SCORE SUBMIT MODAL -->
+<div class="overlay" id="scoreModal" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:420px">
+    <div class="score-modal-grade" id="scoreModalIcon">🏆</div>
+    <h3 id="scoreModalTitle">Enregistre ton score</h3>
+    <p class="sub" id="scoreModalSub">Entre ton pseudo pour apparaître dans le classement.</p>
+    <div id="scoreModalGradeBadge" style="margin-bottom:18px"></div>
+    <input class="pseudo-input" id="pseudoInput" type="text" maxlength="20" placeholder="Ton pseudo (max 20 caractères)">
+    <button id="submitScoreBtn" onclick="submitScore()">Valider et rejoindre le classement →</button>
+    <button class="score-modal-skip" onclick="closeScoreModal()">Non merci, passer</button>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+  /* ====================================================
+     FIREBASE CONFIG
+     → Remplace ces valeurs par celles de ton projet Firebase :
+       1. Va sur https://console.firebase.google.com
+       2. Crée un projet "alphaquiz"
+       3. Ajoute une app Web
+       4. Copie la config ici
+       5. Dans Firestore Database → crée une base en mode "production"
+       6. Dans Règles Firestore, colle :
+            rules_version = '2';
+            service cloud.firestore {
+              match /databases/{database}/documents {
+                match /scores/{doc} {
+                  allow read: if true;
+                  allow create: if request.resource.data.pseudo is string
+                    && request.resource.data.pseudo.size() <= 20
+                    && request.resource.data.score is int;
+                }
+              }
+            }
+  ==================================================== */
+  const firebaseConfig = {
+    apiKey:            "REMPLACE_PAR_TON_API_KEY",
+    authDomain:        "REMPLACE.firebaseapp.com",
+    projectId:         "REMPLACE_PAR_TON_PROJECT_ID",
+    storageBucket:     "REMPLACE.appspot.com",
+    messagingSenderId: "REMPLACE",
+    appId:             "REMPLACE"
+  };
+
+  let db = null;
+  try {
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+  } catch(e) {
+    console.warn("Firebase non configuré — classement désactivé.");
+  }
+
+  /* Expose les fonctions Firebase au script global */
+  window._fbSave = async (pseudo, score, grade) => {
+    if (!db) return false;
+    try {
+      await addDoc(collection(db, "scores"), {
+        pseudo: pseudo.trim(),
+        score,
+        grade,
+        ts: serverTimestamp()
+      });
+      return true;
+    } catch(e) { console.error(e); return false; }
+  };
+
+  window._fbTop10 = async () => {
+    if (!db) return null;
+    try {
+      const q = query(collection(db, "scores"), orderBy("score", "desc"), limit(10));
+      const snap = await getDocs(q);
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch(e) { console.error(e); return null; }
+  };
+
+  /* Charge le classement dès le démarrage */
+  window._fbTop10().then(rows => {
+    if (rows === null) {
+      document.getElementById('lbTop').innerHTML =
+        '<div class="lb-empty">Configure Firebase pour activer le classement en ligne.</div>';
+      return;
+    }
+    renderLeaderboard(rows);
+  });
+</script>
+
 <script>
-/* ==========================================================
-   CONFIGURATION
-   ========================================================== */
+/* ====================================================
+   CONFIG
+==================================================== */
 const CONFIG = {
   stripeUnlock: "https://buy.stripe.com/cNi7sL2g26jcf3k1xN7ok00",
   stripePack:   "https://buy.stripe.com/4gMdR99IugXQcVcgsH7ok01",
-  discordInvite: "https://discord.gg/wZXeGr2qgk",
   freeQuestions: 5,
   lockTimerMinutes: 15
 };
 
-/* ==========================================================
+/* ====================================================
+   GRADES
+==================================================== */
+const GRADES = [
+  { min: 18, key: 'legende', label: '👑 Légende',  css: 'legende' },
+  { min: 15, key: 'platine', label: '💎 Platine',  css: 'platine' },
+  { min: 10, key: 'or',      label: '🥇 Or',       css: 'or'      },
+  { min: 5,  key: 'argent',  label: '🥈 Argent',   css: 'argent'  },
+  { min: 0,  key: 'bronze',  label: '🥉 Bronze',   css: 'bronze'  },
+];
+
+function getGrade(s) {
+  return GRADES.find(g => s >= g.min);
+}
+
+function gradeBadgeHTML(s) {
+  const g = getGrade(s);
+  return `<span class="grade-badge ${g.css}">${g.label} — ${s}/20</span>`;
+}
+
+/* ====================================================
    QUESTIONS
-   ========================================================== */
+==================================================== */
 const QUESTIONS = [
   {q:"Quel est l'organe le plus lourd du corps humain ?",
    a:["Le cerveau","Le foie","La peau","Les poumons"], good:2,
@@ -645,76 +668,75 @@ const QUESTIONS = [
    e:"Environ 8 minutes et 20 secondes. Si le Soleil s'éteignait maintenant, tu ne le saurais que dans 8 minutes — tu regardes littéralement le passé."},
   {q:"Quelle est la seule lettre qui n'apparaît dans le nom d'aucun département français ?",
    a:["Le W","Le K","Le Z","Le X"], good:1,
-   e:"Aucun des 101 départements français ne contient la lettre K. Le W existe (Hauts-de-Seine ? non — mais Yvelines non plus...) en fait le W non plus n'existe pas dans certains noms, mais le K est la réponse officielle : zéro occurrence."},
+   e:"Aucun des 101 départements français ne contient la lettre K."},
   {q:"Quel animal a le cœur le plus gros du règne animal ?",
    a:["L'éléphant d'Afrique","Le rorqual bleu","La girafe","L'orque"], good:1,
-   e:"Le cœur du rorqual bleu (baleine bleue) pèse environ 180 kg — la taille d'une petite voiture de golf. Ses battements peuvent être détectés à 3 km de distance."},
+   e:"Le cœur du rorqual bleu (baleine bleue) pèse environ 180 kg. Ses battements peuvent être détectés à 3 km de distance."},
   {q:"En quelle année le premier SMS de l'histoire a-t-il été envoyé ?",
    a:["1989","1992","1996","2000"], good:1,
-   e:"Le 3 décembre 1992, l'ingénieur Neil Papworth envoie « Merry Christmas » depuis un ordinateur vers un téléphone Vodafone. Le destinataire ne pouvait même pas répondre."},
+   e:"Le 3 décembre 1992, l'ingénieur Neil Papworth envoie « Merry Christmas » depuis un ordinateur vers un téléphone Vodafone."},
   {q:"Quel pays possède le plus de fuseaux horaires au monde ?",
    a:["La Russie","Les États-Unis","La France","La Chine"], good:2,
-   e:"La France, avec 12 fuseaux horaires grâce à ses territoires d'outre-mer — de la Polynésie à Wallis-et-Futuna. La Russie n'en a « que » 11."},
+   e:"La France, avec 12 fuseaux horaires grâce à ses territoires d'outre-mer. La Russie n'en a « que » 11."},
   {q:"Quel est le seul aliment qui ne se périme jamais ?",
    a:["Le riz blanc","Le miel","Le sel","Le sucre"], good:1,
-   e:"Du miel comestible a été retrouvé dans des tombes égyptiennes vieilles de 3000 ans. Sa faible teneur en eau et son acidité empêchent toute prolifération bactérienne."},
+   e:"Du miel comestible a été retrouvé dans des tombes égyptiennes vieilles de 3000 ans."},
   {q:"Combien de cœurs possède une pieuvre ?",
    a:["1","2","3","4"], good:2,
-   e:"Trois : deux pompent le sang vers les branchies, un vers le reste du corps. Détail étonnant : son cœur principal s'arrête quand elle nage — c'est pour ça qu'elle préfère ramper."},
+   e:"Trois : deux pompent le sang vers les branchies, un vers le reste du corps."},
   {q:"Quelle ville a été la capitale de la France pendant la Seconde Guerre mondiale (zone libre) ?",
    a:["Lyon","Bordeaux","Vichy","Toulouse"], good:2,
-   e:"Vichy, de 1940 à 1944. Choisie notamment pour sa grande capacité hôtelière — l'État avait besoin de loger des milliers de fonctionnaires du jour au lendemain."},
+   e:"Vichy, de 1940 à 1944. Choisie notamment pour sa grande capacité hôtelière."},
   {q:"Quel pourcentage de l'ADN humain partageons-nous avec la banane ?",
    a:["Environ 10%","Environ 25%","Environ 60%","Environ 85%"], good:2,
-   e:"Environ 60% de nos gènes ont un équivalent chez la banane. Les mécanismes de base de la vie (division cellulaire, respiration) sont les mêmes depuis des milliards d'années."},
+   e:"Environ 60% de nos gènes ont un équivalent chez la banane."},
   {q:"Quelle est la seule planète du système solaire à tourner sur elle-même dans le sens horaire ?",
    a:["Mercure","Vénus","Uranus","Neptune"], good:1,
-   e:"Vénus tourne « à l'envers », probablement suite à une collision géante. Sur Vénus, le Soleil se lève à l'ouest — et une journée y dure plus longtemps qu'une année."},
+   e:"Vénus tourne « à l'envers ». Sur Vénus, le Soleil se lève à l'ouest."},
   {q:"Quel écrivain français a refusé le prix Nobel de littérature ?",
    a:["Albert Camus","Jean-Paul Sartre","Marcel Proust","André Gide"], good:1,
-   e:"Sartre en 1964, fidèle à son refus de toute institution. Anecdote : des années plus tard, il aurait discrètement demandé si l'argent du prix était toujours disponible. Non."},
+   e:"Sartre en 1964, fidèle à son refus de toute institution."},
   {q:"Combien de muscles utilise-t-on pour faire un pas ?",
    a:["Environ 40","Environ 100","Environ 200","Environ 300"], good:2,
-   e:"Environ 200 muscles travaillent en coordination pour un simple pas. La marche est si complexe que les robots les plus avancés ont mis des décennies à l'imiter correctement."},
+   e:"Environ 200 muscles travaillent en coordination pour un simple pas."},
   {q:"Quel est le mot le plus long de la langue française reconnu par les dictionnaires ?",
    a:["Anticonstitutionnellement","Intergouvernementalisations","Hippopotomonstrosesquippedaliophobie","Déconstitutionnalisation"], good:0,
-   e:"« Anticonstitutionnellement » (25 lettres) reste le champion officiel des dictionnaires. L'« hippopotomonstro... » désigne ironiquement la peur des mots longs, mais n'est pas reconnu."},
+   e:"« Anticonstitutionnellement » (25 lettres) reste le champion officiel des dictionnaires."},
   {q:"Dans quel pays trouve-t-on le plus de pyramides au monde ?",
    a:["L'Égypte","Le Mexique","Le Soudan","Le Pérou"], good:2,
-   e:"Le Soudan compte plus de 200 pyramides nubiennes — presque le double de l'Égypte (118). Elles sont plus petites, plus pentues, et quasi inconnues du grand public."},
+   e:"Le Soudan compte plus de 200 pyramides nubiennes — presque le double de l'Égypte."},
   {q:"Quelle est la durée d'un jour sur la planète Mercure ?",
    a:["10 heures terrestres","59 jours terrestres","176 jours terrestres","1 an terrestre"], good:2,
-   e:"Un jour solaire complet sur Mercure (lever de soleil à lever de soleil) dure 176 jours terrestres — soit deux années mercuriennes. Le jour y est plus long que l'année."},
+   e:"Un jour solaire sur Mercure dure 176 jours terrestres — soit deux années mercuriennes."},
   {q:"Quel pays a inventé les croissants ?",
    a:["La France","La Belgique","L'Autriche","L'Italie"], good:2,
-   e:"L'Autriche. Le « kipferl » viennois est l'ancêtre du croissant, importé en France au XIXe siècle. La légende le lie au siège de Vienne par les Ottomans en 1683 — d'où la forme de croissant de lune."},
+   e:"L'Autriche. Le « kipferl » viennois est l'ancêtre du croissant."},
   {q:"Combien d'odeurs différentes le nez humain peut-il distinguer ?",
    a:["10 000","100 000","1 million","Plus de 1 000 milliards"], good:3,
-   e:"Une étude de 2014 a estimé que nous pouvons distinguer plus de 1000 milliards d'odeurs — bien loin du mythe des 10 000. L'odorat est notre sens le plus sous-estimé."},
+   e:"Une étude de 2014 a estimé plus de 1000 milliards d'odeurs."},
   {q:"Quel est le seul pays au monde sans aucune rivière permanente ?",
    a:["La Mongolie","L'Arabie Saoudite","Le Tchad","L'Islande"], good:1,
-   e:"L'Arabie Saoudite, malgré sa taille immense, n'a aucun cours d'eau permanent. Le pays dépend du dessalement de l'eau de mer et de nappes fossiles vieilles de 20 000 ans."},
+   e:"L'Arabie Saoudite dépend du dessalement de l'eau de mer et de nappes fossiles."},
   {q:"En quelle année Nintendo a-t-elle été fondée ?",
    a:["1889","1923","1956","1977"], good:0,
-   e:"1889 ! Nintendo vendait à l'origine des cartes à jouer japonaises (hanafuda). L'entreprise a 100 ans de plus que la Game Boy — elle a même tenté les taxis et les love hotels avant les jeux vidéo."}
+   e:"1889 ! Nintendo vendait à l'origine des cartes à jouer japonaises (hanafuda)."}
 ];
 
-/* ==========================================================
-   AUTO-DÉBLOCAGE (retour de paiement Stripe)
-   ========================================================== */
+/* ====================================================
+   ÉTAT
+==================================================== */
 const _urlP = new URLSearchParams(window.location.search);
-if(_urlP.get('unlocked')==='1') localStorage.setItem('aq_unlocked','1');
-if(_urlP.get('pack')==='1') localStorage.setItem('aq_pack','1');
+if (_urlP.get('unlocked') === '1') localStorage.setItem('aq_unlocked', '1');
+if (_urlP.get('pack') === '1') localStorage.setItem('aq_pack', '1');
 
-/* ==========================================================
-   ÉTAT DU QUIZ
-   ========================================================== */
 let idx = 0, score = 0, timerInt = null, upsellTimeout = null;
-let unlocked = (_urlP.get('unlocked')==='1' || _urlP.get('pack')==='1');
+let unlocked = _urlP.get('unlocked') === '1' || _urlP.get('pack') === '1';
 
 const $ = id => document.getElementById(id);
 
-/* ----- Hero mini-quiz ----- */
+/* ====================================================
+   HERO MINI-QUIZ
+==================================================== */
 document.querySelectorAll('#heroQuiz .hq-opt').forEach(btn => {
   btn.addEventListener('click', () => {
     const good = btn.dataset.good === "1";
@@ -724,19 +746,18 @@ document.querySelectorAll('#heroQuiz .hq-opt').forEach(btn => {
     });
     if (!good) btn.classList.add('bad');
     const r = $('hqResult');
-    r.innerHTML = (good
-      ? "<b>Bien joué — tu fais partie des 13%.</b> "
-      : "<b>Raté — comme 87% des joueurs.</b> ")
+    r.innerHTML = (good ? "<b>Bien joué — tu fais partie des 13%.</b> " : "<b>Raté — comme 87% des joueurs.</b> ")
       + "Le Brésil est traversé par l'équateur au nord et le tropique du Capricorne au sud. "
       + '<a href="#themes">Le vrai quiz commence ici →</a>';
     r.classList.add('show');
   });
 });
 
-/* ----- Démarrage du quiz ----- */
+/* ====================================================
+   QUIZ
+==================================================== */
 function startQuiz() {
-  idx = 0;
-  score = 0;
+  idx = 0; score = 0;
   clearInterval(timerInt);
   clearTimeout(upsellTimeout);
   unlocked = localStorage.getItem('aq_unlocked') === '1' || localStorage.getItem('aq_pack') === '1';
@@ -763,8 +784,7 @@ function renderQuestion() {
 
 function answer(i) {
   const q = QUESTIONS[idx];
-  const opts = document.querySelectorAll('#pOpts .p-opt');
-  opts.forEach((b, j) => {
+  document.querySelectorAll('#pOpts .p-opt').forEach((b, j) => {
     b.disabled = true;
     if (j === q.good) b.classList.add('good');
     if (j === i && i !== q.good) b.classList.add('bad');
@@ -780,11 +800,7 @@ function answer(i) {
 function nextQuestion() {
   idx++;
   if (idx >= QUESTIONS.length) {
-    if (unlocked) {
-      showResult();
-    } else {
-      showLockscreen();
-    }
+    unlocked ? showResult() : showLockscreen();
     return;
   }
   if (idx >= CONFIG.freeQuestions && !unlocked) {
@@ -794,7 +810,9 @@ function nextQuestion() {
   renderQuestion();
 }
 
-/* ----- Écran de blocage 1,99€ ----- */
+/* ====================================================
+   LOCK SCREEN
+==================================================== */
 function showLockscreen() {
   $('player').classList.remove('show');
   $('lockScore').textContent = `${score}/${CONFIG.freeQuestions}`;
@@ -815,11 +833,8 @@ function startLockTimer() {
   timerInt = setInterval(tick, 1000);
 }
 
-/* ----- Déblocage (1,99€) ----- */
 function unlockQuiz() {
-  if (CONFIG.stripeUnlock) {
-    window.open(CONFIG.stripeUnlock, '_blank');
-  }
+  if (CONFIG.stripeUnlock) window.open(CONFIG.stripeUnlock, '_blank');
   unlocked = true;
   clearInterval(timerInt);
   $('lockscreen').classList.remove('show');
@@ -827,33 +842,27 @@ function unlockQuiz() {
   renderQuestion();
 }
 
-/* ----- Résultat final + upsell ----- */
+/* ====================================================
+   RÉSULTAT
+==================================================== */
 function showResult() {
   $('player').classList.remove('show');
-  const total = QUESTIONS.length;
-  $('finalScore').textContent = `${score}/${total}`;
-  const pct = score / total;
-  let grade, text;
-  if (pct >= .9) {
-    grade = "🏆 Niveau Légende";
-    text = "Tu fais partie du top 3% des joueurs. Honnêtement, on ne pensait pas que quelqu'un irait aussi loin. Les 8 thèmes du pack sont ton prochain terrain de jeu.";
-  } else if (pct >= .7) {
-    grade = "🥇 Niveau Expert";
-    text = "Solide. Très solide. Il te manque juste quelques zones d'ombre — et le pack complet est exactement fait pour les combler.";
-  } else if (pct >= .5) {
-    grade = "🥈 Niveau Explorateur";
-    text = "Tu as les bases, mais tu as vu : chaque question t'a appris quelque chose. Imagine après 30 quiz comme celui-là.";
-  } else {
-    grade = "🥉 Niveau Curieux";
-    text = "Le score compte moins que ce que tu viens d'apprendre. Et tu viens d'apprendre beaucoup. La progression, c'est exactement ce que le pack te donne.";
-  }
-  $('finalGrade').textContent = grade;
-  $('finalText').textContent = text;
+  const g = getGrade(score);
+  $('finalScore').textContent = `${score}/20`;
+  $('finalGradeBadge').innerHTML = gradeBadgeHTML(score);
+
+  const texts = {
+    legende: "Tu fais partie du top 3% des joueurs. Les 8 thèmes du pack sont ton prochain terrain de jeu.",
+    platine: "Solide. Très solide. Il te manque juste quelques zones d'ombre.",
+    or:      "Tu as les bases, mais tu as vu : chaque question t'a appris quelque chose.",
+    argent:  "Bon début. Le pack complet est exactement fait pour progresser.",
+    bronze:  "Le score compte moins que ce que tu viens d'apprendre. Et tu viens d'apprendre beaucoup."
+  };
+  $('finalText').textContent = texts[g.key];
   $('resultscreen').classList.add('show');
   upsellTimeout = setTimeout(openUpsell, 1500);
 }
 
-/* ----- Navigation vers les offres depuis le résultat ----- */
 function goToOffers() {
   clearTimeout(upsellTimeout);
   closeUpsell();
@@ -862,21 +871,142 @@ function goToOffers() {
   document.getElementById('offres').scrollIntoView({ behavior: 'smooth' });
 }
 
-/* ----- Upsell 4,99€ ----- */
-function openUpsell() { $('upsell').classList.add('show'); }
-function closeUpsell() { $('upsell').classList.remove('show'); }
+/* ====================================================
+   SCORE SUBMIT MODAL
+==================================================== */
+function openScoreModal() {
+  clearTimeout(upsellTimeout);
+  closeUpsell();
+  const g = getGrade(score);
+  const icons = { legende:'👑', platine:'💎', or:'🥇', argent:'🥈', bronze:'🥉' };
+  $('scoreModalIcon').textContent = icons[g.key];
+  $('scoreModalTitle').textContent = `Tu as obtenu ${g.label} !`;
+  $('scoreModalSub').textContent = `Score : ${score}/20 — entre ton pseudo pour rejoindre le classement.`;
+  $('scoreModalGradeBadge').innerHTML = gradeBadgeHTML(score);
+  $('pseudoInput').value = localStorage.getItem('aq_pseudo') || '';
+  $('submitScoreBtn').disabled = false;
+  $('submitScoreBtn').textContent = 'Valider et rejoindre le classement →';
+  $('scoreModal').classList.add('show');
+}
 
-function buyPack() {
-  if (CONFIG.stripePack) {
-    window.open(CONFIG.stripePack, '_blank');
+function closeScoreModal() {
+  $('scoreModal').classList.remove('show');
+}
+
+async function submitScore() {
+  const pseudo = $('pseudoInput').value.trim();
+  if (!pseudo) { $('pseudoInput').focus(); return; }
+
+  const btn = $('submitScoreBtn');
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours...';
+
+  const g = getGrade(score);
+  const ok = typeof window._fbSave === 'function'
+    ? await window._fbSave(pseudo, score, g.label)
+    : false;
+
+  if (ok) {
+    localStorage.setItem('aq_pseudo', pseudo);
+    saveMyScore(pseudo, score, g);
+    btn.textContent = '✓ Score enregistré !';
+    setTimeout(() => {
+      closeScoreModal();
+      document.getElementById('classement').scrollIntoView({ behavior: 'smooth' });
+      reloadLeaderboard();
+    }, 1200);
   } else {
-    alert("⚙️ Configure ton lien de paiement Stripe dans CONFIG.stripePack.");
+    btn.textContent = '⚠️ Configure Firebase pour activer le classement';
+    btn.disabled = false;
+    /* Sauvegarde locale quand même */
+    saveMyScore(pseudo, score, g);
+    localStorage.setItem('aq_pseudo', pseudo);
+    setTimeout(() => {
+      closeScoreModal();
+      renderMyScore();
+    }, 2000);
   }
 }
 
-/* Fermer le modal avec Échap ou clic sur le fond */
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeUpsell(); });
+/* ====================================================
+   LEADERBOARD
+==================================================== */
+function saveMyScore(pseudo, s, g) {
+  const prev = JSON.parse(localStorage.getItem('aq_my_score') || '{}');
+  if (!prev.score || s >= prev.score) {
+    localStorage.setItem('aq_my_score', JSON.stringify({ pseudo, score: s, grade: g.label, css: g.css }));
+  }
+}
+
+function renderLeaderboard(rows) {
+  if (!rows || rows.length === 0) {
+    $('lbTop').innerHTML = '<div class="lb-empty">Aucun score encore. Sois le premier !</div>';
+    return;
+  }
+  const rankClass = i => i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+  const rankLabel = i => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`;
+
+  const myPseudo = localStorage.getItem('aq_pseudo');
+  $('lbTop').innerHTML = rows.map((r, i) => {
+    const g = getGrade(r.score);
+    const isMe = myPseudo && r.pseudo === myPseudo;
+    return `<div class="lb-row${isMe ? ' me' : ''}">
+      <span class="lb-rank ${rankClass(i)}">${rankLabel(i)}</span>
+      <span class="lb-name">${escHtml(r.pseudo)}${isMe ? ' <span style="color:var(--gold);font-size:12px">(toi)</span>' : ''}</span>
+      <span class="lb-grade ${g.css}">${g.label}</span>
+      <span class="lb-score">${r.score}/20</span>
+    </div>`;
+  }).join('');
+}
+
+function renderMyScore() {
+  const my = JSON.parse(localStorage.getItem('aq_my_score') || '{}');
+  if (!my.score) {
+    $('lbMe').innerHTML = '<div class="lb-empty">Termine un quiz pour voir ton score ici.</div>';
+    return;
+  }
+  $('lbMe').innerHTML = `
+    <div class="lb-row me">
+      <span class="lb-rank gold">👤</span>
+      <span class="lb-name">${escHtml(my.pseudo)}</span>
+      <span class="lb-grade ${my.css}">${my.grade}</span>
+      <span class="lb-score">${my.score}/20</span>
+    </div>
+    <div class="lb-you-row">Ton meilleur score sauvegardé localement.<br><b>Soumets-le</b> après un quiz pour apparaître dans le classement global.</div>`;
+}
+
+async function reloadLeaderboard() {
+  $('lbTop').innerHTML = '<div class="lb-loading">Mise à jour...</div>';
+  if (typeof window._fbTop10 === 'function') {
+    const rows = await window._fbTop10();
+    if (rows) renderLeaderboard(rows);
+  }
+}
+
+function switchTab(tab, el) {
+  document.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  $('lbTop').style.display = tab === 'top' ? 'grid' : 'none';
+  $('lbMe').style.display = tab === 'me' ? 'grid' : 'none';
+  if (tab === 'me') renderMyScore();
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ====================================================
+   UPSELL
+==================================================== */
+function openUpsell() { $('upsell').classList.add('show'); }
+function closeUpsell() { $('upsell').classList.remove('show'); }
+function buyPack() {
+  if (CONFIG.stripePack) window.open(CONFIG.stripePack, '_blank');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeUpsell(); closeScoreModal(); } });
 $('upsell').addEventListener('click', e => { if (e.target === $('upsell')) closeUpsell(); });
+$('scoreModal').addEventListener('click', e => { if (e.target === $('scoreModal')) closeScoreModal(); });
 </script>
 </body>
 </html>
