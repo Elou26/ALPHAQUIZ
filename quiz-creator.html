@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Short Creator — Alpha Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0A0A0F;
+  --ink-2: #12121A;
+  --ink-3: #1B1B26;
+  --line: rgba(240,240,240,.08);
+  --paper: #F0F0F0;
+  --muted: #8B8B98;
+  --gold: #F5C842;
+  --gold-deep: #D9A916;
+  --green: #4ADE80;
+  --red: #F87171;
+  --blue: #60A5FA;
+  --radius: 14px;
+  --font-d: 'Space Grotesk', sans-serif;
+  --font-b: 'Inter', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--ink); color: var(--paper); font-family: var(--font-b); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+h1,h2,h3,h4 { font-family: var(--font-d); line-height: 1.2; font-weight: 700; }
+button { font-family: inherit; cursor: pointer; border: none; }
+input, textarea, select { font-family: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+
+/* NAV */
+nav {
+  background: rgba(10,10,15,.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  padding: 0 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.logo { font-family: var(--font-d); font-weight: 700; font-size: 18px; letter-spacing: -.02em; text-decoration: none; color: var(--paper); }
+.logo span { color: var(--gold); }
+.nav-right { display: flex; align-items: center; gap: 14px; }
+.nav-back { font-size: 13px; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 5px; transition: color .15s; }
+.nav-back:hover { color: var(--paper); }
+
+/* LAYOUT */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 0;
+  min-height: calc(100vh - 60px);
+}
+@media (max-width: 1000px) {
+  .layout { grid-template-columns: 1fr; }
+  .preview-panel { order: -1; }
+}
+
+/* EDITOR PANEL */
+.editor-panel {
+  padding: 32px 28px;
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+}
+.editor-panel h2 {
+  font-size: 22px;
+  margin-bottom: 4px;
+  letter-spacing: -.01em;
+}
+.editor-panel .sub {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 28px;
+}
+
+/* FORM FIELDS */
+.field { margin-bottom: 20px; }
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.field label .hint {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--muted);
+  opacity: .7;
+  margin-left: 6px;
+}
+.field input[type="text"],
+.field textarea,
+.field select {
+  width: 100%;
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--paper);
+  font-size: 14px;
+  transition: border-color .15s;
+}
+.field input[type="text"]:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: rgba(245,200,66,.4);
+  outline: none;
+}
+.field textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
+.field input::placeholder, .field textarea::placeholder { color: var(--muted); opacity: .6; }
+
+/* CHARACTER COUNT */
+.char-count {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+  margin-top: 4px;
+}
+.char-count.warn { color: var(--gold); }
+.char-count.over { color: var(--red); }
+
+/* SECTION DIVIDER */
+.section-label {
+  font-family: var(--font-d);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin: 28px 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* QUESTION CARD */
+.q-card {
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 14px;
+  transition: border-color .15s;
+}
+.q-card:focus-within { border-color: rgba(245,200,66,.3); }
+.q-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.q-num {
+  font-family: var(--font-d);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(245,200,66,.1);
+  border: 1px solid rgba(245,200,66,.2);
+  border-radius: 99px;
+  padding: 3px 10px;
+}
+.q-type-toggle {
+  display: flex;
+  gap: 6px;
+}
+.q-type-btn {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  transition: all .15s;
+}
+.q-type-btn.active {
+  background: rgba(245,200,66,.1);
+  border-color: rgba(245,200,66,.4);
+  color: var(--gold);
+}
+.q-card input[type="text"] {
+  width: 100%;
+  background: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--paper);
+  font-size: 14px;
+  margin-bottom: 10px;
+  transition: border-color .15s;
+}
+.q-card input[type="text"]:focus { border-color: rgba(245,200,66,.3); outline: none; }
+.q-card input::placeholder { color: var(--muted); opacity: .6; }
+
+/* CHOICES */
+.choices { display: grid; gap: 8px; }
+.choice-row { display: flex; align-items: center; gap: 8px; }
+.choice-row input[type="radio"] { accent-color: var(--gold); width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; }
+.choice-key {
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  background: rgba(240,240,240,.06);
+  border: 1px solid var(--line);
+  display: grid; place-items: center;
+  font-family: var(--font-d);
+  font-size: 11px; font-weight: 700;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.choice-row.correct .choice-key { background: rgba(74,222,128,.15); border-color: rgba(74,222,128,.4); color: var(--green); }
+.choice-row input[type="text"] {
+  flex: 1;
+  background: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 8px 10px;
+  color: var(--paper);
+  font-size: 13px;
+  transition: border-color .15s;
+}
+.choice-row.correct input[type="text"] { border-color: rgba(74,222,128,.3); }
+
+/* TRUE / FALSE */
+.tf-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+.tf-btn {
+  padding: 12px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: var(--ink-3);
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all .15s;
+  cursor: pointer;
+}
+.tf-btn.true-btn:hover { border-color: rgba(74,222,128,.4); color: var(--green); }
+.tf-btn.false-btn:hover { border-color: rgba(248,113,113,.4); color: var(--red); }
+.tf-btn.true-btn.selected { border-color: var(--green); background: rgba(74,222,128,.1); color: var(--green); }
+.tf-btn.false-btn.selected { border-color: var(--red); background: rgba(248,113,113,.09); color: var(--red); }
+
+/* CORRECT LABEL */
+.correct-label { font-size: 11px; color: var(--muted); margin-top: 6px; }
+.correct-label b { color: var(--gold); }
+
+/* ACTION BAR */
+.action-bar {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 11px 20px; border-radius: 99px;
+  font-weight: 600; font-size: 14px;
+  transition: transform .15s, box-shadow .15s;
+  text-decoration: none;
+}
+.btn-gold { background: var(--gold); color: var(--ink); }
+.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,200,66,.25); }
+.btn-ghost { border: 1px solid var(--line); color: var(--paper); background: transparent; }
+.btn-ghost:hover { border-color: rgba(240,240,240,.25); }
+.btn-green { background: var(--green); color: var(--ink); }
+.btn-green:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(74,222,128,.25); }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--paper);
+  z-index: 200;
+  transition: transform .3s ease;
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: rgba(74,222,128,.4); color: var(--green); }
+
+/* PREVIEW PANEL */
+.preview-panel {
+  background: var(--ink-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 20px;
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+.preview-panel h3 {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+  align-self: flex-start;
+}
+
+/* PHONE MOCKUP */
+.phone {
+  width: 280px;
+  min-height: 500px;
+  background: #000;
+  border-radius: 36px;
+  border: 6px solid #222;
+  box-shadow: 0 24px 60px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.05);
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+.phone-notch {
+  width: 90px; height: 22px;
+  background: #000;
+  border-radius: 0 0 14px 14px;
+  margin: 0 auto;
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  background: linear-gradient(180deg, #0D0D14 0%, #0A0A0F 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 30px 16px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* SHORT CONTENT */
+.s-header {
+  margin-bottom: 16px;
+}
+.s-channel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.s-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--gold);
+  display: grid; place-items: center;
+  font-family: var(--font-d);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.s-channel-name { font-size: 11px; font-weight: 600; color: var(--paper); }
+.s-subscribe {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--red);
+  margin-left: auto;
+  background: rgba(248,113,113,.12);
+  border: 1px solid rgba(248,113,113,.3);
+  border-radius: 99px;
+  padding: 2px 8px;
+}
+.s-title {
+  font-family: var(--font-d);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 4px;
+  color: var(--paper);
+}
+.s-desc {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* QUESTION IN SHORT */
+.s-question {
+  background: rgba(240,240,240,.04);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.s-q-indicator {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.s-q-dot {
+  height: 3px;
+  border-radius: 99px;
+  background: rgba(240,240,240,.15);
+  flex: 1;
+  transition: background .3s;
+}
+.s-q-dot.active { background: var(--gold); }
+.s-q-dot.done { background: rgba(245,200,66,.4); }
+.s-q-text {
+  font-family: var(--font-d);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 10px;
+  flex: 1;
+  color: var(--paper);
+}
+.s-opts { display: grid; gap: 5px; }
+.s-opt {
+  background: rgba(240,240,240,.05);
+  border: 1px solid rgba(240,240,240,.1);
+  border-radius: 7px;
+  padding: 7px 9px;
+  font-size: 10.5px;
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.s-opt .key {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  background: rgba(240,240,240,.07);
+  display: grid; place-items: center;
+  font-family: var(--font-d);
+  font-size: 9px; font-weight: 700;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.s-opt.correct { border-color: rgba(74,222,128,.4); background: rgba(74,222,128,.08); }
+.s-opt.correct .key { background: var(--green); color: var(--ink); }
+
+/* SHORT NAV DOTS */
+.s-nav {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+.s-nav-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(240,240,240,.2);
+  cursor: pointer;
+  transition: all .2s;
+}
+.s-nav-dot.active { background: var(--gold); width: 14px; border-radius: 99px; }
+
+/* PREVIEW CONTROLS */
+.preview-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  width: 100%;
+  max-width: 280px;
+}
+.preview-controls button {
+  flex: 1;
+  background: var(--ink-3);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all .15s;
+}
+.preview-controls button:hover { border-color: rgba(245,200,66,.3); color: var(--paper); }
+
+/* EXPORT MODAL */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(5,5,8,.85);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.overlay.show { display: flex; }
+.modal {
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  max-width: 560px;
+  width: 100%;
+  padding: 32px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal h3 { font-size: 20px; margin-bottom: 8px; }
+.modal .lead { color: var(--muted); font-size: 14px; margin-bottom: 22px; }
+.export-block {
+  background: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.export-block h4 { font-size: 13px; color: var(--gold); margin-bottom: 10px; font-family: var(--font-d); }
+.export-block pre {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.6;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.modal-close {
+  display: block;
+  margin-top: 16px;
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 10px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all .15s;
+}
+.modal-close:hover { border-color: rgba(240,240,240,.25); color: var(--paper); }
+
+/* COPY BTN */
+.copy-btn {
+  margin-top: 8px;
+  background: rgba(245,200,66,.08);
+  border: 1px solid rgba(245,200,66,.2);
+  color: var(--gold);
+  border-radius: 7px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all .15s;
+  width: 100%;
+}
+.copy-btn:hover { background: rgba(245,200,66,.15); }
+
+/* SAVED SHORTS */
+.saved-panel {
+  padding: 32px 28px;
+  border-top: 1px solid var(--line);
+}
+.shorts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.short-card {
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  cursor: pointer;
+  transition: all .15s;
+  text-align: left;
+}
+.short-card:hover { border-color: rgba(245,200,66,.35); transform: translateY(-2px); }
+.short-card .sc-title {
+  font-family: var(--font-d);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.short-card .sc-meta { font-size: 12px; color: var(--muted); }
+.short-card .sc-actions { display: flex; gap: 6px; margin-top: 10px; }
+.sc-act {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.sc-act:hover { border-color: rgba(240,240,240,.25); color: var(--paper); }
+.sc-act.del:hover { border-color: rgba(248,113,113,.4); color: var(--red); }
+.empty-state { text-align: center; color: var(--muted); padding: 28px; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">ALPHA<span>QUIZ</span></a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back">← Back to site</a>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- EDITOR -->
+  <div class="editor-panel" id="editorPanel">
+    <h2>Quiz Short Creator</h2>
+    <p class="sub">Build a quiz short — 5 questions, catchy title, ready to post.</p>
+
+    <!-- META -->
+    <div class="field">
+      <label>Short Title <span class="hint">Hook your viewer in 1 line</span></label>
+      <input type="text" id="shortTitle" maxlength="80" placeholder="e.g. 99% of People Get Question 3 Wrong 🤯" oninput="updatePreview();countChars(this,'titleCount',80)">
+      <div class="char-count" id="titleCount">0 / 80</div>
+    </div>
+    <div class="field">
+      <label>Description <span class="hint">Short hook + subscribe CTA</span></label>
+      <textarea id="shortDesc" maxlength="200" placeholder="Think you know? 5 questions most people fail. Subscribe for more mind-blowing quizzes every day! 🧠🔥" oninput="updatePreview();countChars(this,'descCount',200)"></textarea>
+      <div class="char-count" id="descCount">0 / 200</div>
+    </div>
+
+    <div class="section-label">Questions (5)</div>
+
+    <div id="questionsContainer"></div>
+
+    <div class="action-bar">
+      <button class="btn btn-gold" onclick="saveShort()">💾 Save Short</button>
+      <button class="btn btn-ghost" onclick="exportShort()">📤 Export</button>
+      <button class="btn btn-ghost" onclick="resetForm()">🗑 Clear</button>
+    </div>
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="preview-panel">
+    <h3>Live Preview</h3>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen" id="phoneScreen">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+    <div class="preview-controls">
+      <button onclick="previewPrev()">← Prev</button>
+      <button id="previewQLabel">Q 1/5</button>
+      <button onclick="previewNext()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SAVED SHORTS -->
+<div class="saved-panel">
+  <h2 style="font-size:20px;margin-bottom:4px">My Saved Shorts</h2>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:16px">Stored locally on this device. Export them to save permanently.</p>
+  <div class="shorts-grid" id="savedShorts"></div>
+</div>
+
+<!-- EXPORT MODAL -->
+<div class="overlay" id="exportModal">
+  <div class="modal">
+    <h3>Export Your Short</h3>
+    <p class="lead">Copy the content below to use in your video editing tool, or download as JSON.</p>
+    <div class="export-block">
+      <h4>📋 Script / Caption</h4>
+      <pre id="exportScript"></pre>
+      <button class="copy-btn" onclick="copyText('exportScript')">Copy Script</button>
+    </div>
+    <div class="export-block">
+      <h4>{ } JSON Data</h4>
+      <pre id="exportJson"></pre>
+      <button class="copy-btn" onclick="copyText('exportJson')">Copy JSON</button>
+    </div>
+    <button class="modal-close" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const QUESTION_COUNT = 5;
+let previewIndex = 0;
+const $ = id => document.getElementById(id);
+
+/* ── Build Question Cards ── */
+function buildQuestions() {
+  const c = $('questionsContainer');
+  c.innerHTML = '';
+  for (let i = 0; i < QUESTION_COUNT; i++) {
+    c.appendChild(makeQCard(i));
+  }
+}
+
+function makeQCard(i) {
+  const div = document.createElement('div');
+  div.className = 'q-card';
+  div.id = `qcard-${i}`;
+  div.innerHTML = `
+    <div class="q-card-head">
+      <span class="q-num">Q ${i + 1}</span>
+      <div class="q-type-toggle">
+        <button class="q-type-btn active" onclick="setType(${i},'mcq',this)">A/B/C</button>
+        <button class="q-type-btn" onclick="setType(${i},'tf',this)">True / False</button>
+      </div>
+    </div>
+    <input type="text" id="qtxt-${i}" placeholder="Enter your question..." oninput="updatePreview()">
+    <div id="qopts-${i}"></div>
+    <div class="correct-label" id="qlabel-${i}"></div>
+  `;
+  renderMCQ(i);
+  return div;
+}
+
+function setType(i, type, btn) {
+  btn.closest('.q-type-toggle').querySelectorAll('.q-type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (type === 'mcq') renderMCQ(i);
+  else renderTF(i);
+  updatePreview();
+}
+
+function renderMCQ(i) {
+  const keys = ['A','B','C'];
+  $(`qopts-${i}`).innerHTML = `<div class="choices">${
+    keys.map((k,j) => `
+      <div class="choice-row" id="crow-${i}-${j}">
+        <input type="radio" name="correct-${i}" value="${j}" onchange="markCorrect(${i},${j})">
+        <span class="choice-key">${k}</span>
+        <input type="text" id="copt-${i}-${j}" placeholder="Choice ${k}..." oninput="updatePreview()">
+      </div>`).join('')
+  }</div>`;
+  $(`qlabel-${i}`).innerHTML = 'Select the <b>correct answer</b> with the radio button.';
+}
+
+function renderTF(i) {
+  $(`qopts-${i}`).innerHTML = `
+    <div class="tf-choices">
+      <button class="tf-btn true-btn" id="tf-true-${i}" onclick="selectTF(${i},true)">✓ True</button>
+      <button class="tf-btn false-btn" id="tf-false-${i}" onclick="selectTF(${i},false)">✗ False</button>
+    </div>`;
+  $(`qlabel-${i}`).innerHTML = 'Click <b>True</b> or <b>False</b> to set the correct answer.';
+}
+
+function markCorrect(i, j) {
+  ['crow','copt'].forEach(_ => {});
+  for (let k = 0; k < 3; k++) {
+    const row = $(`crow-${i}-${k}`);
+    if (row) row.classList.toggle('correct', k === j);
+  }
+  updatePreview();
+}
+
+function selectTF(i, isTrue) {
+  $(`tf-true-${i}`).classList.toggle('selected', isTrue);
+  $(`tf-false-${i}`).classList.toggle('selected', !isTrue);
+  $(`tf-true-${i}`).dataset.selected = isTrue ? '1' : '0';
+  $(`tf-false-${i}`).dataset.selected = isTrue ? '0' : '1';
+  updatePreview();
+}
+
+/* ── Read State ── */
+function getState() {
+  const title = $('shortTitle').value.trim();
+  const desc = $('shortDesc').value.trim();
+  const questions = [];
+  for (let i = 0; i < QUESTION_COUNT; i++) {
+    const card = $(`qcard-${i}`);
+    const typeBtn = card.querySelector('.q-type-btn.active');
+    const type = typeBtn && typeBtn.textContent.includes('True') ? 'tf' : 'mcq';
+    const qtxt = $(`qtxt-${i}`).value.trim();
+    let opts = [], correct = -1;
+    if (type === 'mcq') {
+      for (let j = 0; j < 3; j++) {
+        const el = $(`copt-${i}-${j}`);
+        opts.push(el ? el.value.trim() : '');
+      }
+      const checked = card.querySelector(`input[name="correct-${i}"]:checked`);
+      correct = checked ? parseInt(checked.value) : -1;
+    } else {
+      opts = ['True', 'False'];
+      const trueBtn = $(`tf-true-${i}`);
+      const falseBtn = $(`tf-false-${i}`);
+      if (trueBtn && trueBtn.classList.contains('selected')) correct = 0;
+      else if (falseBtn && falseBtn.classList.contains('selected')) correct = 1;
+    }
+    questions.push({ type, q: qtxt, opts, correct });
+  }
+  return { title, desc, questions };
+}
+
+/* ── Preview ── */
+function updatePreview() {
+  const s = getState();
+  const qi = Math.min(previewIndex, QUESTION_COUNT - 1);
+  const q = s.questions[qi] || { q:'', opts:[], correct:-1 };
+  const keys = ['A','B','C'];
+
+  $('phoneScreen').innerHTML = `
+    <div class="s-header">
+      <div class="s-channel">
+        <div class="s-avatar">AQ</div>
+        <span class="s-channel-name">AlphaQuiz</span>
+        <span class="s-subscribe">SUBSCRIBE</span>
+      </div>
+      <div class="s-title">${escHtml(s.title) || 'Your catchy title here...'}</div>
+      <div class="s-desc">${escHtml(s.desc) || 'Your description...'}</div>
+    </div>
+    <div class="s-question">
+      <div class="s-q-indicator">
+        ${Array.from({length:QUESTION_COUNT},(_,k)=>`<div class="s-q-dot${k<qi?' done':k===qi?' active':''}"></div>`).join('')}
+      </div>
+      <div class="s-q-text">${escHtml(q.q) || 'Your question text...'}</div>
+      <div class="s-opts">
+        ${q.opts.map((o,k)=>`
+          <div class="s-opt${k===q.correct?' correct':''}">
+            <span class="key">${q.type==='tf'?(k===0?'T':'F'):keys[k]}</span>
+            ${escHtml(o)||`Option ${keys[k]||k+1}...`}
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="s-nav">
+      ${Array.from({length:QUESTION_COUNT},(_,k)=>`<div class="s-nav-dot${k===qi?' active':''}" onclick="jumpPreview(${k})"></div>`).join('')}
+    </div>`;
+  $('previewQLabel').textContent = `Q ${qi+1}/${QUESTION_COUNT}`;
+}
+
+function escHtml(t) {
+  return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function previewNext() { previewIndex = Math.min(previewIndex+1, QUESTION_COUNT-1); updatePreview(); }
+function previewPrev() { previewIndex = Math.max(previewIndex-1, 0); updatePreview(); }
+function jumpPreview(i) { previewIndex = i; updatePreview(); }
+
+/* ── Char count ── */
+function countChars(el, labelId, max) {
+  const n = el.value.length;
+  const label = $(labelId);
+  label.textContent = `${n} / ${max}`;
+  label.className = 'char-count' + (n > max * .9 ? (n >= max ? ' over' : ' warn') : '');
+}
+
+/* ── Save / Load ── */
+function saveShort() {
+  const s = getState();
+  if (!s.title) { showToast('Add a title first.', false); return; }
+  const saved = getSaved();
+  const existing = saved.findIndex(x => x.id === (s.id || null));
+  const item = { ...s, id: s.id || Date.now().toString(), createdAt: new Date().toISOString() };
+  if (existing >= 0) saved[existing] = item;
+  else saved.unshift(item);
+  localStorage.setItem('aq_shorts', JSON.stringify(saved.slice(0, 50)));
+  showToast('✓ Short saved!', true);
+  renderSaved();
+}
+
+function getSaved() {
+  return JSON.parse(localStorage.getItem('aq_shorts') || '[]');
+}
+
+function renderSaved() {
+  const saved = getSaved();
+  const el = $('savedShorts');
+  if (!saved.length) {
+    el.innerHTML = '<div class="empty-state">No saved shorts yet. Create your first one above!</div>';
+    return;
+  }
+  el.innerHTML = saved.map(s => `
+    <div class="short-card">
+      <div class="sc-title">${escHtml(s.title)}</div>
+      <div class="sc-meta">${s.questions.length} questions · ${new Date(s.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
+      <div class="sc-actions">
+        <button class="sc-act" onclick="loadShort('${s.id}')">Edit</button>
+        <button class="sc-act" onclick="exportById('${s.id}')">Export</button>
+        <button class="sc-act del" onclick="deleteShort('${s.id}')">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+function loadShort(id) {
+  const s = getSaved().find(x => x.id === id);
+  if (!s) return;
+  $('shortTitle').value = s.title;
+  $('shortDesc').value = s.desc;
+  countChars($('shortTitle'), 'titleCount', 80);
+  countChars($('shortDesc'), 'descCount', 200);
+
+  for (let i = 0; i < QUESTION_COUNT; i++) {
+    const q = s.questions[i] || { type:'mcq', q:'', opts:['','',''], correct:-1 };
+    $(`qtxt-${i}`).value = q.q;
+
+    const card = $(`qcard-${i}`);
+    const btns = card.querySelectorAll('.q-type-btn');
+    btns.forEach(b => b.classList.remove('active'));
+
+    if (q.type === 'tf') {
+      btns[1].classList.add('active');
+      renderTF(i);
+      if (q.correct === 0) selectTF(i, true);
+      else if (q.correct === 1) selectTF(i, false);
+    } else {
+      btns[0].classList.add('active');
+      renderMCQ(i);
+      q.opts.forEach((o, j) => {
+        const el = $(`copt-${i}-${j}`);
+        if (el) el.value = o;
+      });
+      if (q.correct >= 0) {
+        const radio = card.querySelector(`input[name="correct-${i}"][value="${q.correct}"]`);
+        if (radio) { radio.checked = true; markCorrect(i, q.correct); }
+      }
+    }
+  }
+  updatePreview();
+  $('editorPanel').scrollIntoView({ behavior: 'smooth' });
+  showToast('Short loaded for editing.', true);
+}
+
+function deleteShort(id) {
+  if (!confirm('Delete this short?')) return;
+  const saved = getSaved().filter(x => x.id !== id);
+  localStorage.setItem('aq_shorts', JSON.stringify(saved));
+  renderSaved();
+  showToast('Deleted.', false);
+}
+
+/* ── Export ── */
+function exportShort() {
+  const s = getState();
+  openExportModal(s);
+}
+
+function exportById(id) {
+  const s = getSaved().find(x => x.id === id);
+  if (s) openExportModal(s);
+}
+
+function openExportModal(s) {
+  const script = buildScript(s);
+  $('exportScript').textContent = script;
+  $('exportJson').textContent = JSON.stringify(s, null, 2);
+  $('exportModal').classList.add('show');
+}
+
+function closeModal() { $('exportModal').classList.remove('show'); }
+
+function buildScript(s) {
+  let out = `🎬 "${s.title}"\n\n`;
+  if (s.desc) out += `📝 ${s.desc}\n\n`;
+  out += `${'─'.repeat(40)}\n\n`;
+  const keys = ['A','B','C'];
+  s.questions.forEach((q, i) => {
+    out += `Q${i+1}: ${q.q}\n`;
+    q.opts.forEach((o, j) => {
+      const label = q.type === 'tf' ? (j===0?'TRUE':'FALSE') : `${keys[j]}.`;
+      const mark = j === q.correct ? ' ✓' : '';
+      out += `   ${label} ${o}${mark}\n`;
+    });
+    out += '\n';
+  });
+  out += `${'─'.repeat(40)}\n`;
+  out += `🔔 Subscribe for more!\n`;
+  return out;
+}
+
+function copyText(elId) {
+  const text = $(elId).textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('✓ Copied!', true));
+}
+
+/* ── Reset ── */
+function resetForm() {
+  if (!confirm('Clear all fields?')) return;
+  $('shortTitle').value = '';
+  $('shortDesc').value = '';
+  countChars($('shortTitle'), 'titleCount', 80);
+  countChars($('shortDesc'), 'descCount', 200);
+  buildQuestions();
+  previewIndex = 0;
+  updatePreview();
+}
+
+/* ── Toast ── */
+function showToast(msg, ok = true) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (ok ? ' success' : '');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => { t.classList.remove('show'); }, 2500);
+}
+
+/* ── Close modal on outside click ── */
+$('exportModal').addEventListener('click', e => { if (e.target === $('exportModal')) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ── Init ── */
+buildQuestions();
+updatePreview();
+renderSaved();
+</script>
+</body>
+</html>
