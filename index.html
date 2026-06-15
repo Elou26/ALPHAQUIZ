@@ -272,6 +272,62 @@
   }
   .return-nudge b{color:var(--gold)}
 
+  /* GRADE PROGRESS BAR */
+  .grade-progress{
+    margin:16px 0 20px;
+    background:var(--ink-3);border:1px solid var(--line);
+    border-radius:12px;padding:16px 18px;text-align:left;
+  }
+  .gp-label{font-size:13px;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between}
+  .gp-label b{color:var(--paper)}
+  .gp-track{height:6px;background:rgba(240,240,240,.08);border-radius:99px;overflow:hidden;margin-bottom:8px}
+  .gp-fill{height:100%;border-radius:99px;background:var(--gold);transition:width .6s ease}
+  .gp-next{font-size:12px;color:var(--muted)}
+  .gp-next b{color:var(--gold)}
+
+  /* WEEKLY CHALLENGE BANNER */
+  .weekly-banner{
+    background:linear-gradient(135deg,rgba(180,100,255,.10),rgba(245,200,66,.07));
+    border:1px solid rgba(180,100,255,.3);
+    border-radius:var(--radius);padding:18px 22px;
+    display:flex;align-items:center;gap:16px;
+    margin-bottom:28px;flex-wrap:wrap;
+  }
+  .weekly-banner .wb-icon{font-size:28px;flex-shrink:0}
+  .weekly-banner .wb-text{flex:1}
+  .weekly-banner .wb-title{font-family:var(--font-d);font-weight:700;font-size:16px;margin-bottom:2px}
+  .weekly-banner .wb-sub{font-size:13px;color:var(--muted)}
+  .weekly-banner .wb-badge{
+    font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    background:rgba(180,100,255,.2);border:1px solid rgba(180,100,255,.4);
+    color:#B464FF;border-radius:99px;padding:4px 12px;flex-shrink:0;
+  }
+
+  /* LOCKED PREVIEW */
+  .locked-preview{
+    max-width:680px;margin:20px auto 0;
+    background:var(--ink-2);border:1px solid rgba(245,200,66,.2);
+    border-radius:var(--radius);padding:28px;
+    position:relative;overflow:hidden;
+  }
+  .locked-preview::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(to bottom,transparent 0%,var(--ink-2) 70%);
+    pointer-events:none;
+  }
+  .lp-tag{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .lp-q{font-family:var(--font-d);font-size:18px;font-weight:600;margin-bottom:16px;line-height:1.35;filter:blur(0)}
+  .lp-opts{display:grid;gap:9px;opacity:.45;pointer-events:none}
+  .lp-opt{background:var(--ink-3);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:14px;display:flex;align-items:center;gap:10px;color:var(--paper)}
+  .lp-opt .key{width:22px;height:22px;border-radius:5px;background:rgba(240,240,240,.06);display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--muted);font-family:var(--font-d);flex-shrink:0}
+  .lp-unlock{
+    position:absolute;bottom:0;left:0;right:0;z-index:2;
+    padding:22px 28px;text-align:center;
+  }
+  .lp-unlock p{font-size:14px;color:var(--muted);margin-bottom:12px}
+  .lp-unlock p b{color:var(--paper)}
+  .lp-unlock .btn-gold{width:100%;justify-content:center;padding:14px;border-radius:10px;font-size:15px}
+
   /* FOOTER */
   footer{border-top:1px solid var(--line);padding:44px 0;color:var(--muted);font-size:14px}
   .foot-in{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
@@ -323,6 +379,14 @@
     <div class="sec-head">
       <h2>Choisis ton terrain.</h2>
       <p>8 thèmes, des dizaines de quiz ultra détaillés. Le premier quiz de Culture Générale est ouvert — les autres se débloquent avec le pack.</p>
+    </div>
+    <div class="weekly-banner" id="weeklyBanner">
+      <span class="wb-icon">⚡</span>
+      <div class="wb-text">
+        <div class="wb-title" id="weeklyTitle"></div>
+        <div class="wb-sub" id="weeklySub"></div>
+      </div>
+      <span class="wb-badge">Cette semaine</span>
     </div>
     <div class="themes">
       <button class="theme free" onclick="startQuiz()">
@@ -387,9 +451,21 @@
       <p class="trust">Paiement sécurisé · Accès instantané</p>
     </div>
 
+    <!-- Aperçu question verrouillée -->
+    <div class="locked-preview" id="lockedPreview" style="display:none">
+      <div class="lp-tag">👀 Aperçu — Question <span id="lpNum">6</span></div>
+      <div class="lp-q" id="lpQuestion"></div>
+      <div class="lp-opts" id="lpOpts"></div>
+      <div class="lp-unlock">
+        <p>Tu vois la question. <b>Tu ne peux pas répondre.</b></p>
+        <button class="btn btn-gold" onclick="unlockQuiz()">Débloquer pour 1,99€ et répondre →</button>
+      </div>
+    </div>
+
     <div class="player resultscreen" id="resultscreen">
       <div class="big" id="finalScore">0/20</div>
       <div id="finalGradeBadge"></div>
+      <div class="grade-progress" id="gradeProgress"></div>
       <p id="finalText"></p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
         <button class="btn btn-gold" onclick="goToOffers()">Débloquer les 8 thèmes</button>
@@ -780,6 +856,7 @@ function startDailyCountdown() {
 ==================================================== */
 initStreak();
 initDailyQuestion();
+initWeeklyChallenge();
 
 /* ====================================================
    QUIZ
@@ -792,6 +869,7 @@ function startQuiz() {
   $('play').style.display = 'block';
   $('lockscreen').classList.remove('show');
   $('resultscreen').classList.remove('show');
+  $('lockedPreview').style.display = 'none';
   $('player').classList.add('show');
   renderQuestion();
   $('play').scrollIntoView({ behavior: 'smooth' });
@@ -839,12 +917,77 @@ function nextQuestion() {
 }
 
 /* ====================================================
+   DÉFI HEBDOMADAIRE
+==================================================== */
+const WEEKLY_CHALLENGES = [
+  { icon:'🌍', title:'Semaine Géographie', sub:'Teste tes connaissances sur les capitales, pays et mystères du monde.' },
+  { icon:'🏛️', title:'Semaine Histoire',   sub:'De l\'Antiquité à nos jours — les grands événements qui ont façonné le monde.' },
+  { icon:'🔬', title:'Semaine Sciences',   sub:'Physique, biologie, astronomie — la science dans tous ses états.' },
+  { icon:'🎬', title:'Semaine Cinéma',     sub:'Culte ou récent, du blockbuster à l\'art et essai — prouve ta culture ciné.' },
+  { icon:'⚽', title:'Semaine Sport',      sub:'Records, légendes et moments iconiques du sport mondial.' },
+  { icon:'🍝', title:'Semaine Gastronomie',sub:'Cuisines du monde, traditions culinaires et secrets des grands chefs.' },
+  { icon:'⚡', title:'Semaine Mythologie', sub:'Dieux, héros et énigmes des grandes mythologies du monde.' },
+  { icon:'🧠', title:'Semaine Culture G',  sub:'Le grand mélange — tout ce qui fait la vraie culture générale.' },
+];
+
+function initWeeklyChallenge() {
+  const weekNum = Math.floor(Date.now() / (7 * 86400000));
+  const challenge = WEEKLY_CHALLENGES[weekNum % WEEKLY_CHALLENGES.length];
+  $('weeklyTitle').textContent = challenge.title;
+  $('weeklySub').textContent = challenge.sub;
+  $('weeklyBanner').querySelector('.wb-icon').textContent = challenge.icon;
+}
+
+/* ====================================================
+   APERÇU QUESTION VERROUILLÉE
+==================================================== */
+function showLockedPreview() {
+  const nextIdx = CONFIG.freeQuestions; // question 6 (index 5)
+  const q = QUESTIONS[nextIdx];
+  if (!q) return;
+  $('lpNum').textContent = nextIdx + 1;
+  $('lpQuestion').textContent = q.q;
+  const keys = ['A','B','C','D'];
+  $('lpOpts').innerHTML = q.a.map((opt, i) =>
+    `<div class="lp-opt"><span class="key">${keys[i]}</span>${opt}</div>`
+  ).join('');
+  $('lockedPreview').style.display = 'block';
+}
+
+/* ====================================================
+   BARRE DE PROGRESSION DE GRADE
+==================================================== */
+function renderGradeProgress(s) {
+  const thresholds = [
+    { min:0,  max:4,  next:5,  nextName:'🥈 Argent' },
+    { min:5,  max:9,  next:10, nextName:'🥇 Or' },
+    { min:10, max:14, next:15, nextName:'💎 Platine' },
+    { min:15, max:17, next:18, nextName:'👑 Légende' },
+    { min:18, max:20, next:null, nextName:null },
+  ];
+  const tier = thresholds.find(t => s >= t.min && s <= t.max);
+  if (!tier || !tier.next) {
+    $('gradeProgress').innerHTML = `<div class="gp-label"><b>👑 Score maximum atteint !</b></div><div class="gp-track"><div class="gp-fill" style="width:100%"></div></div>`;
+    return;
+  }
+  const range = tier.max - tier.min + 1;
+  const pos = s - tier.min;
+  const pct = Math.round((pos / range) * 100);
+  const missing = tier.next - s;
+  $('gradeProgress').innerHTML = `
+    <div class="gp-label"><b>Progression vers ${tier.nextName}</b><span>${s}/${tier.next}</span></div>
+    <div class="gp-track"><div class="gp-fill" style="width:${pct}%"></div></div>
+    <div class="gp-next">Il te manque <b>${missing} point${missing > 1 ? 's' : ''}</b> pour atteindre ${tier.nextName}</div>`;
+}
+
+/* ====================================================
    LOCK SCREEN
 ==================================================== */
 function showLockscreen() {
   $('player').classList.remove('show');
   $('lockScore').textContent = `${score}/${CONFIG.freeQuestions}`;
   $('lockscreen').classList.add('show');
+  showLockedPreview();
   startLockTimer();
 }
 
@@ -878,6 +1021,7 @@ function showResult() {
   const g = getGrade(score);
   $('finalScore').textContent = `${score}/20`;
   $('finalGradeBadge').innerHTML = gradeBadgeHTML(score);
+  renderGradeProgress(score);
 
   const texts = {
     legende: "Tu fais partie du top 3% des joueurs. Les 8 thèmes du pack sont ton prochain terrain de jeu.",
