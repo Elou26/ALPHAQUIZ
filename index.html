@@ -917,18 +917,32 @@ function startQuiz() {
   idx = 0; score = 0; hearts = 3; sessionXP = 0;
   clearInterval(timerInt);
   clearTimeout(upsellTimeout);
-  hideFeedbackPanel();
   unlocked = localStorage.getItem('aq_unlocked') === '1' || localStorage.getItem('aq_pack') === '1';
-  $('play').style.display = 'block';
+
+  // rendre la section visible
+  var play = $('play');
+  play.style.display = 'block';
+  play.style.visibility = 'visible';
+
+  // cacher les autres écrans
   $('lockscreen').classList.remove('show');
   $('resultscreen').classList.remove('show');
   $('gameover').classList.remove('show');
   $('lockedPreview').style.display = 'none';
-  $('player').classList.add('show');
+
+  // montrer le player
+  var player = $('player');
+  player.classList.add('show');
+  player.style.display = 'block';
+
+  // reset feedback panel si présent
+  var fp = document.getElementById('feedbackPanel');
+  if (fp) fp.className = 'feedback-panel';
+
   $('pXP').textContent = '⚡ 0 XP';
   renderHearts();
   renderQuestion();
-  $('play').scrollIntoView({ behavior: 'smooth' });
+  play.scrollIntoView({ behavior: 'smooth' });
 }
 
 function renderHearts() {
