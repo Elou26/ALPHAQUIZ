@@ -96,8 +96,27 @@
   .theme .lock{position:absolute;top:14px;right:14px;font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--muted);background:rgba(240,240,240,.05);border:1px solid var(--line);border-radius:99px;padding:3px 9px}
   .theme.free .lock{color:var(--ink);background:var(--gold);border-color:var(--gold)}
 
+  /* QUIZ OVERLAY */
+  #quizOverlay{
+    position:fixed;inset:0;z-index:300;
+    background:var(--ink);
+    overflow-y:auto;
+    display:none;
+    padding:0 0 120px;
+  }
+  #quizOverlay.show{display:block}
+  .qo-nav{
+    position:sticky;top:0;z-index:10;
+    background:rgba(10,10,15,.92);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;
+    height:56px;padding:0 24px;
+  }
+  .qo-close{background:none;color:var(--muted);font-size:22px;padding:4px 8px;border-radius:6px}
+  .qo-close:hover{color:var(--paper)}
+
   /* QUIZ PLAYER */
-  .player{max-width:680px;margin:0 auto;background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:36px;display:none}
+  .player{max-width:680px;margin:32px auto 0;background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:36px;display:none}
   .player.show{display:block}
   @media(max-width:560px){.player{padding:24px 18px}}
   .p-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:13px;color:var(--muted)}
@@ -466,7 +485,15 @@
   </div>
 </section>
 
-<!-- QUIZ PLAYER -->
+<!-- QUIZ OVERLAY -->
+<div id="quizOverlay">
+  <div class="qo-nav">
+    <span class="logo">ALPHA<span style="color:var(--gold)">QUIZ</span></span>
+    <button class="qo-close" onclick="closeQuiz()" title="Quitter">✕</button>
+  </div>
+  <div class="wrap">
+
+<!-- QUIZ PLAYER (kept for scroll fallback) -->
 <section id="play" style="display:none">
   <div class="wrap">
     <div class="player" id="player">
@@ -528,6 +555,9 @@
     </div>
   </div>
 </section>
+
+  </div><!-- /.wrap overlay -->
+</div><!-- /#quizOverlay -->
 
 <!-- MON SCORE -->
 <section id="classement">
@@ -919,30 +949,37 @@ function startQuiz() {
   clearTimeout(upsellTimeout);
   unlocked = localStorage.getItem('aq_unlocked') === '1' || localStorage.getItem('aq_pack') === '1';
 
-  // rendre la section visible
-  var play = $('play');
-  play.style.display = 'block';
-  play.style.visibility = 'visible';
-
-  // cacher les autres écrans
+  // reset des écrans
   $('lockscreen').classList.remove('show');
   $('resultscreen').classList.remove('show');
   $('gameover').classList.remove('show');
   $('lockedPreview').style.display = 'none';
 
   // montrer le player
-  var player = $('player');
-  player.classList.add('show');
-  player.style.display = 'block';
+  $('player').classList.add('show');
+  $('player').style.display = 'block';
 
-  // reset feedback panel si présent
+  // reset feedback panel
   var fp = document.getElementById('feedbackPanel');
   if (fp) fp.className = 'feedback-panel';
 
   $('pXP').textContent = '⚡ 0 XP';
   renderHearts();
   renderQuestion();
-  play.scrollIntoView({ behavior: 'smooth' });
+
+  // afficher l'overlay plein écran
+  var overlay = document.getElementById('quizOverlay');
+  overlay.classList.add('show');
+  overlay.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeQuiz() {
+  document.getElementById('quizOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+  clearInterval(timerInt);
+  var fp = document.getElementById('feedbackPanel');
+  if (fp) fp.className = 'feedback-panel';
 }
 
 function renderHearts() {
@@ -1188,8 +1225,7 @@ function showResult() {
 function goToOffers() {
   clearTimeout(upsellTimeout);
   closeUpsell();
-  $('play').style.display = 'none';
-  $('resultscreen').classList.remove('show');
+  closeQuiz();
   document.getElementById('offres').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -1223,10 +1259,9 @@ function renderMyScore() {
 }
 
 function goToScore() {
-  $('play').style.display = 'none';
-  $('resultscreen').classList.remove('show');
   clearTimeout(upsellTimeout);
   closeUpsell();
+  closeQuiz();
   document.getElementById('classement').scrollIntoView({ behavior: 'smooth' });
 }
 
