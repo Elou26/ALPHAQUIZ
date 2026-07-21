@@ -949,6 +949,9 @@ function startQuiz() {
   clearTimeout(upsellTimeout);
   unlocked = localStorage.getItem('aq_unlocked') === '1' || localStorage.getItem('aq_pack') === '1';
 
+  // rendre la section play visible
+  $('play').style.display = 'block';
+
   // reset des écrans
   $('lockscreen').classList.remove('show');
   $('resultscreen').classList.remove('show');
