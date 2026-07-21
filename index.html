@@ -639,9 +639,10 @@ function gradeBadgeHTML(s) {
 }
 
 /* ====================================================
-   QUESTIONS
+   BANQUE DE QUESTIONS (toutes les questions, source unique)
 ==================================================== */
-const QUESTIONS = [
+const ALL_QUESTIONS = [
+  /* — Quiz principal (20 premières) — */
   {q:"Quel est l'organe le plus lourd du corps humain ?",
    a:["Le cerveau","Le foie","La peau","Les poumons"], good:2,
    e:"La peau pèse environ 4 à 5 kg chez un adulte — soit près du double du foie (1,5 kg) et du cerveau (1,4 kg). C'est aussi le plus grand organe avec presque 2 m² de surface."},
@@ -701,25 +702,8 @@ const QUESTIONS = [
    e:"L'Arabie Saoudite dépend du dessalement de l'eau de mer et de nappes fossiles."},
   {q:"En quelle année Nintendo a-t-elle été fondée ?",
    a:["1889","1923","1956","1977"], good:0,
-   e:"1889 ! Nintendo vendait à l'origine des cartes à jouer japonaises (hanafuda)."}
-];
-
-/* ====================================================
-   ÉTAT
-==================================================== */
-const _urlP = new URLSearchParams(window.location.search);
-if (_urlP.get('unlocked') === '1') localStorage.setItem('aq_unlocked', '1');
-if (_urlP.get('pack') === '1') localStorage.setItem('aq_pack', '1');
-
-let idx = 0, score = 0, timerInt = null, upsellTimeout = null;
-let unlocked = _urlP.get('unlocked') === '1' || _urlP.get('pack') === '1';
-
-const $ = id => document.getElementById(id);
-
-/* ====================================================
-   QUESTIONS DU JOUR (pool de 30, change chaque jour)
-==================================================== */
-const DAILY_POOL = [
+   e:"1889 ! Nintendo vendait à l'origine des cartes à jouer japonaises (hanafuda)."},
+  /* — Questions du jour (30 suivantes, rotation quotidienne) — */
   {q:"Quel est le seul pays au monde traversé à la fois par l'équateur et un tropique ?",a:["Kenya","Brésil","Indonésie","Colombie"],good:1,pct:"87%",e:"Le Brésil est traversé par l'équateur au nord et le tropique du Capricorne au sud."},
   {q:"Combien d'os possède un requin ?",a:["0","12","86","206"],good:0,pct:"74%",e:"Les requins n'ont aucun os — leur squelette est entièrement fait de cartilage."},
   {q:"Quelle est la capitale de l'Australie ?",a:["Sydney","Melbourne","Canberra","Brisbane"],good:2,pct:"61%",e:"Canberra, pas Sydney ! La ville a été construite exprès pour éviter la rivalité entre Sydney et Melbourne."},
@@ -751,6 +735,22 @@ const DAILY_POOL = [
   {q:"Quel est le plus grand organe interne du corps humain ?",a:["Cœur","Cerveau","Foie","Poumons"],good:2,pct:"58%",e:"Le foie est le plus grand organe interne avec environ 1,5 kg."},
   {q:"Combien de secondes y a-t-il dans une heure ?",a:["360","3 600","36 000","360 000"],good:1,pct:"25%",e:"60 secondes × 60 minutes = 3 600 secondes par heure."},
 ];
+
+/* Quiz principal = 20 premières questions ; daily pool = tout le reste */
+const QUESTIONS = ALL_QUESTIONS.slice(0, 20);
+const DAILY_POOL = ALL_QUESTIONS.slice(20);
+
+/* ====================================================
+   ÉTAT
+==================================================== */
+const _urlP = new URLSearchParams(window.location.search);
+if (_urlP.get('unlocked') === '1') localStorage.setItem('aq_unlocked', '1');
+if (_urlP.get('pack') === '1') localStorage.setItem('aq_pack', '1');
+
+let idx = 0, score = 0, timerInt = null, upsellTimeout = null;
+let unlocked = _urlP.get('unlocked') === '1' || _urlP.get('pack') === '1';
+
+const $ = id => document.getElementById(id);
 
 /* ====================================================
    STREAK
